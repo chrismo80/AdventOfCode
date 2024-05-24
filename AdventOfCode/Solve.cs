@@ -12,7 +12,7 @@ public static class Problem
             //AdventOfCode2016.Day20.Solve();
             //AdventOfCode2015.Day17.Solve();
             //AdventOfCode2016.Day24.Solve();
-            AdventOfCode2017.Day7.Solve();
+            AdventOfCode2016.Day16.Solve();
         }
 
         Console.WriteLine($"Duration: {Stopwatch.GetElapsedTime(start).Divide(runs).TotalMilliseconds:F1} ms");
