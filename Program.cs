@@ -1,2 +1,1 @@
-﻿// AdventOfCode.Problem.Solve();
-Language.Language.Translate();
+﻿AdventOfCode.Problem.Solve();
