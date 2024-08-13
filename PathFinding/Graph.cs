@@ -13,6 +13,9 @@ public class Graph<T> where T : notnull
         Nodes[edge.Item2][edge.Item1] = distance;
     }
 
+    public int Distance(IEnumerable<T> path) =>
+        path.Skip(1).Zip(path, (end, start) => Nodes[start][end]).Sum();
+
     public IEnumerable<(T Node, int Distance)> Dijkstra(T start, T end)
     {
         Previous.Clear();
