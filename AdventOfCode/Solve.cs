@@ -5,14 +5,14 @@ public static class Problem
 {
     public static void Solve()
     {
+        // required if run with Rider
+        Directory.SetCurrentDirectory("../../../");
+
         long start = Stopwatch.GetTimestamp(), c = 0, runs = 1;
 
         while (c++ < runs)
         {
-            //AdventOfCode2016.Day20.Solve();
-            //AdventOfCode2015.Day17.Solve();
-            //AdventOfCode2016.Day24.Solve();
-            AdventOfCode2016.Day16.Solve();
+            AdventOfCode2024.Day1.Solve();
         }
 
         Console.WriteLine($"Duration: {Stopwatch.GetElapsedTime(start).Divide(runs).TotalMilliseconds:F1} ms");
