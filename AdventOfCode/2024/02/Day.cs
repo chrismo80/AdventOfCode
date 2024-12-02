@@ -1,7 +1,5 @@
-using System.Security.Cryptography;
-
 namespace AdventOfCode2024;
-using Extensions;
+
 public static class Day2
 {
     public static void Solve()

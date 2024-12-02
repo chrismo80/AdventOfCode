@@ -1,5 +1,5 @@
 namespace AdventOfCode2024;
-using Extensions;
+
 public static class Day1
 {
     public static void Solve()
