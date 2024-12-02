@@ -11,3 +11,16 @@
 /obj
 *.txt
 *.DS_Store
+
+
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+TestResults/
+.idea/
+.vs/
+*.code-workspace
+*.user
