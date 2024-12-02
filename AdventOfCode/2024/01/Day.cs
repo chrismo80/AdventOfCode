@@ -4,8 +4,6 @@ public static class Day1
 {
     public static void Solve()
     {
-        Console.WriteLine(Directory.GetCurrentDirectory());
-
         var input = File.ReadAllLines("AdventOfCode/2024/01/Input.txt")
             .Select(x => x.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse))
             .ToList();
