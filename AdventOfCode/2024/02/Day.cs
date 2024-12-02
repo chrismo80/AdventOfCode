@@ -8,10 +8,10 @@ public static class Day2
             .Select(x => x.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse))
             .ToList();
 
-        var safeReports = reports.Where(l => Safe(Diffs(l)));
+        var safeReports = reports.Where(l => IsSafe(Diffs(l)));
         
         var nearlySafeReports = reports.Except(safeReports)
-            .Where(l => SubLevels(l).Select(Diffs).Any(Safe));
+            .Where(l => SubLevels(l).Select(Diffs).Any(IsSafe));
         
         Console.WriteLine($"Part 1: {safeReports.Count()}, Part 2: {safeReports.Count() + nearlySafeReports.Count()}");
     }
@@ -19,7 +19,7 @@ public static class Day2
     private static IEnumerable<int> Diffs(IEnumerable<int> levels) =>
         levels.Skip(1).Zip(levels.SkipLast(1), (x, y) => x - y);
     
-    private static bool Safe(IEnumerable<int> diffs) =>
+    private static bool IsSafe(IEnumerable<int> diffs) =>
         diffs.All(x => x >= 1 && x <= 3) || diffs.All(x => x <= -1 && x >= -3);
 
     private static IEnumerable<IEnumerable<int>> SubLevels(IEnumerable<int> levels) =>
