@@ -12,7 +12,7 @@ public static class Problem
 
         while (c++ < runs)
         {
-            AdventOfCode2024.Day3.Solve();
+            AdventOfCode2024.Day4.Solve();
         }
 
         Console.WriteLine($"Duration: {Stopwatch.GetElapsedTime(start).Divide(runs).TotalMilliseconds:F1} ms");
