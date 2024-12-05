@@ -11,7 +11,7 @@ public static class Day3
 
         var matches = new Regex(@"mul\(([0-9]+)\,([0-9]+)\)|do\(\)|don\'t\(\)").Matches(input);
         
-        var result1 = Calculate(matches.Where(match => match.Value.StartsWith("mul")));
+        var multiplications = matches.Where(match => match.Value.StartsWith("mul"));
         
         bool enabled = true;
         var instructions = new List<Match>();
@@ -27,15 +27,13 @@ public static class Day3
                     enabled = false;
                     break;
                 default:
-                    if(enabled) 
+                    if(enabled)
                         instructions.Add(match);
                     break;
             }
         }
 
-        var result2 = Calculate(instructions);
-
-        Console.WriteLine($"Part 1: {result1}, Part 2: {Calculate(instructions)}");
+        Console.WriteLine($"Part 1: {Calculate(multiplications)}, Part 2: {Calculate(instructions)}");
     }
 
     private static int Calculate(IEnumerable<Match> matches) =>
