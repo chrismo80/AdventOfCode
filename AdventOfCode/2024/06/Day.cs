@@ -9,7 +9,7 @@ public static class Day6
 	{
 		var map = File.ReadAllLines("AdventOfCode/2024/06/Input.txt").Select(row => row.ToArray()).ToArray();
 
-		var grid = new PathFinding.Grid<char>() { Map = map, Walkable = (_, _, next, _) => next != '#' };
+		var grid = new PathFinding.Grid<char>() { Map = map, Walkable = (_, _, next, _, _, _) => next != '#' };
 
 		var start = grid.Find((value) => value != '.' && value != '#');
 

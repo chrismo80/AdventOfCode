@@ -10,7 +10,7 @@ public static class Day15
 		var search = new PathFinding.Grid<int>()
 		{
 			Map = input,
-			Walkable = (_, _, _, _) => true,
+			Walkable = (_, _, _, _, _, _) => true,
 			Cost = (neighbor) => neighbor
 		};
 

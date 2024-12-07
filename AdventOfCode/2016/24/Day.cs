@@ -8,7 +8,7 @@ public static class Day24
 	{
 		var map = File.ReadAllLines("AdventOfCode/2016/24/Input.txt").Select(row => row.ToArray()).ToArray();
 
-		var search = new PathFinding.Grid<char>() { Map = map, Walkable = (_, _, next, _) => next != '#' };
+		var search = new PathFinding.Grid<char>() { Map = map, Walkable = (_, _, next, _, _, _) => next != '#' };
 		var distances = new Dictionary<(int From, int To), int>();
 
 		// get node positions from map (for BFS start/end)

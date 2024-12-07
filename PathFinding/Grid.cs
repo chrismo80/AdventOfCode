@@ -26,8 +26,8 @@ public class Grid<T>
 	public Func<T, int>? Cost { get; set; } = (_) => 1;
 
 	///<summary>defines if neighbor is walkable (default: same value as current)</summary>
-	public Func<int, int, T, T, bool>? Walkable { get; set; } =
-		(nX, nY, neighbor, current) => neighbor!.Equals(current);
+	public Func<int, int, T, int, int, T, bool>? Walkable { get; set; } =
+		(nX, nY, neighbor, cX, cY, current) => neighbor!.Equals(current);
 
 	public List<(int X, int Y)> Path { get; private set; } = new();
 
@@ -51,7 +51,8 @@ public class Grid<T>
 			if (Pos(current) == Pos(target))
 				return Path = ReversePath(current).Reverse().ToList();
 
-			foreach (var neighbor in Neighbors(current).Where(n => Walkable!(n.X, n.Y, Value(n), Value(current))))
+			foreach (var neighbor in Neighbors(current)
+						.Where(n => Walkable!(n.X, n.Y, Value(n), current.X, current.Y, Value(current))))
 				if (Visited.Add(Pos(neighbor)))
 				{
 					neighbor.Init(target, Cost!(Value(neighbor)), current);
@@ -83,7 +84,7 @@ public class Grid<T>
 
 			foreach (var neighbor in Neighbors(current.X, current.Y)
 						.Where(neighbor =>
-							Walkable!(neighbor.X, neighbor.Y, Value(neighbor), Value(current)) &&
+							Walkable!(neighbor.X, neighbor.Y, Value(neighbor), current.X, current.Y, Value(current)) &&
 							Visited.Add(neighbor)))
 			{
 				previous[neighbor] = current;
@@ -153,7 +154,7 @@ public class Grid<T>
 				Path.Contains((x, y)) ? path :
 				visited != default && Active.UnorderedItems.Any(v => v.Element.X == x && v.Element.Y == y) ? active :
 				visited != default && Visited.Contains((x, y)) ? visited :
-				Walkable!(x, y, Map[y][x], Map[y][x]) ? '➰' :
+				Walkable!(x, y, Map[y][x], x, y, Map[y][x]) ? '➰' :
 				wall == default(char) ? Map[y][x] : wall);
 
 		var efficiency = Path.Any() ? (double)Path.Count / Visited.Count : 0;
