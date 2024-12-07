@@ -27,7 +27,7 @@ public static class Day12
 		}
 
 		var search = new PathFinding.Grid<char>()
-			{ Map = map, Walkable = (_, _, next, _, _, current) => next - current <= 1 };
+			{ Map = map, Walkable = (_, _, next, _, _, current, _, _, _) => next - current <= 1 };
 		var path = search.AStar(start, end);
 		//Console.WriteLine(search.Print('⭕', '⚪'));
 
@@ -45,7 +45,7 @@ public static class Day12
 			var search = new PathFinding.Grid<char>()
 			{
 				Map = map,
-				Walkable = (_, _, next, _, _, current) => next - current <= 1
+				Walkable = (_, _, next, _, _, current, _, _, _) => next - current <= 1
 			};
 
 			var distance = search.AStar(start, end).Count();

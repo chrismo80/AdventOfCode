@@ -26,8 +26,8 @@ public class Grid<T>
 	public Func<T, int>? Cost { get; set; } = (_) => 1;
 
 	///<summary>defines if neighbor is walkable (default: same value as current)</summary>
-	public Func<int, int, T, int, int, T, bool>? Walkable { get; set; } =
-		(nX, nY, neighbor, cX, cY, current) => neighbor!.Equals(current);
+	public Func<int, int, T, int, int, T, int, int, T, bool>? Walkable { get; set; } =
+		(nX, nY, neighbor, cX, cY, current, lX, lY, last) => neighbor!.Equals(current);
 
 	public List<(int X, int Y)> Path { get; private set; } = new();
 
@@ -40,6 +40,8 @@ public class Grid<T>
 		var current = new Node() { X = start.X, Y = start.Y };
 		var target = new Node() { X = end.X, Y = end.Y };
 
+		var last = new Node();
+
 		current.Init(target);
 		Visited.Add(Pos(current));
 		Active.Enqueue(current, current.Priority);
@@ -51,28 +53,34 @@ public class Grid<T>
 			if (Pos(current) == Pos(target))
 				return Path = ReversePath(current).Reverse().ToList();
 
-			foreach (var neighbor in Neighbors(current)
-						.Where(n => Walkable!(n.X, n.Y, Value(n), current.X, current.Y, Value(current))))
+			foreach (var neighbor in Neighbors(current).Where(n => Walkable!(
+						n.X, n.Y, Value(n),
+						current.X, current.Y, Value(current),
+						last.X, last.Y, Value(last)
+					)))
 				if (Visited.Add(Pos(neighbor)))
 				{
 					neighbor.Init(target, Cost!(Value(neighbor)), current);
 					Active.Enqueue(neighbor, neighbor.Priority);
+					last = current;
 				}
 		}
 
 		return Path;
 	}
 
-	public IEnumerable<(int X, int Y)> BreadthFirstSearch((int X, int Y) start, (int X, int Y) end)
+	public IEnumerable<(int X, int Y)> BreadthFirstSearch((int X, int Y) start, (int X, int Y) end,
+		(int X, int Y) last = default)
 	{
 		Path.Clear();
 		Visited.Clear();
 
-		var previous = new Dictionary<(int, int), (int, int)>();
+		var previous = new Dictionary<(int X, int Y), (int X, int Y)>();
 		var active = new Queue<(int, int)>();
 
 		Visited.Add(start);
 		active.Enqueue(start);
+		previous[start] = last;
 		var current = start;
 
 		while (active.Count > 0)
@@ -82,10 +90,12 @@ public class Grid<T>
 			if (current.Equals(end))
 				break;
 
-			foreach (var neighbor in Neighbors(current.X, current.Y)
-						.Where(neighbor =>
-							Walkable!(neighbor.X, neighbor.Y, Value(neighbor), current.X, current.Y, Value(current)) &&
-							Visited.Add(neighbor)))
+			foreach (var neighbor in Neighbors(current.X, current.Y).Where(neighbor =>
+						Walkable!(
+							neighbor.X, neighbor.Y, Value(neighbor),
+							current.X, current.Y, Value(current),
+							previous[current].X, previous[current].Y, Value(previous[current])
+						) && Visited.Add(neighbor)))
 			{
 				previous[neighbor] = current;
 				active.Enqueue(neighbor);
@@ -95,7 +105,7 @@ public class Grid<T>
 		return Path = ReversePath(current, start, previous).Reverse().ToList();
 	}
 
-	public (int, int) Find(Func<T, bool> predicate)
+	public (int X, int Y) Find(Func<T, bool> predicate)
 	{
 		foreach (var (x, y) in from y in Enumerable.Range(0, Map.Length)
 				from x in Enumerable.Range(0, Map[0].Length)
@@ -154,7 +164,7 @@ public class Grid<T>
 				Path.Contains((x, y)) ? path :
 				visited != default && Active.UnorderedItems.Any(v => v.Element.X == x && v.Element.Y == y) ? active :
 				visited != default && Visited.Contains((x, y)) ? visited :
-				Walkable!(x, y, Map[y][x], x, y, Map[y][x]) ? '➰' :
+				Walkable!(x, y, Map[y][x], x, y, Map[y][x], x, y, Map[y][x]) ? '➰' :
 				wall == default(char) ? Map[y][x] : wall);
 
 		var efficiency = Path.Any() ? (double)Path.Count / Visited.Count : 0;

@@ -56,7 +56,7 @@ public static class Day15
 		var search = new PathFinding.Grid<char>()
 		{
 			Map = PrintMap(walls, free, pos).Select(row => row.ToArray()).ToArray(),
-			Walkable = (_, _, next, _, _, _) => next != '#'
+			Walkable = (_, _, next, _, _, _, _, _, _) => next != '#'
 		};
 
 		var result1 = search.BreadthFirstSearch(start, oxygen).ToList();
