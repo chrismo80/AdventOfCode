@@ -1,145 +1,162 @@
 namespace PathFinding;
+
 public class Grid<T>
 {
-    private class Node
-    {
-        public Node? Previous;
-        public int X, Y, Cost, Distance;
-        public int Priority => Cost + Distance;
-        public void Init(Node end, int cost = 0, Node? previous = null)
-        {
-            Previous = previous;
-            Cost = (3 * cost) + (previous?.Cost ?? 0);
-            Distance = Math.Abs(end.X - X) + Math.Abs(end.Y - Y);
-        }
-    }
+	private class Node
+	{
+		public Node? Previous;
+		public int X, Y, Cost, Distance;
+		public int Priority => Cost + Distance;
 
-    readonly PriorityQueue<Node, int> Active = new();
+		public void Init(Node end, int cost = 0, Node? previous = null)
+		{
+			Previous = previous;
+			Cost = 3 * cost + (previous?.Cost ?? 0);
+			Distance = Math.Abs(end.X - X) + Math.Abs(end.Y - Y);
+		}
+	}
 
-    readonly HashSet<(int, int)> Visited = new();
+	private readonly PriorityQueue<Node, int> Active = new();
 
-    public required T[][] Map { get; set; }
+	private readonly HashSet<(int, int)> Visited = new();
 
-    ///<summary>cost of walking to neighbor (default: 1)</summary>
-    public Func<T, int>? Cost { get; set; } = (_) => 1;
+	public required T[][] Map { get; set; }
 
-    ///<summary>defines if neighbor is walkable (default: same value as current)</summary>
-    public Func<T, T, bool>? Walkable { get; set; } = (neighbor, current) => neighbor!.Equals(current);
+	///<summary>cost of walking to neighbor (default: 1)</summary>
+	public Func<T, int>? Cost { get; set; } = (_) => 1;
 
-    public List<(int X, int Y)> Path { get; private set; } = new List<(int X, int Y)>();
+	///<summary>defines if neighbor is walkable (default: same value as current)</summary>
+	public Func<int, int, T, T, bool>? Walkable { get; set; } =
+		(nX, nY, neighbor, current) => neighbor!.Equals(current);
 
-    public IEnumerable<(int X, int Y)> AStar((int X, int Y) start, (int X, int Y) end)
-    {
-        Path.Clear(); Visited.Clear(); Active.Clear();
+	public List<(int X, int Y)> Path { get; private set; } = new();
 
-        var current = new Node() { X = start.X, Y = start.Y };
-        var target = new Node() { X = end.X, Y = end.Y };
+	public IEnumerable<(int X, int Y)> AStar((int X, int Y) start, (int X, int Y) end)
+	{
+		Path.Clear();
+		Visited.Clear();
+		Active.Clear();
 
-        current.Init(target);
-        Visited.Add(Pos(current));
-        Active.Enqueue(current, current.Priority);
+		var current = new Node() { X = start.X, Y = start.Y };
+		var target = new Node() { X = end.X, Y = end.Y };
 
-        while (Active.Count > 0)
-        {
-            current = Active.Dequeue();
+		current.Init(target);
+		Visited.Add(Pos(current));
+		Active.Enqueue(current, current.Priority);
 
-            if (Pos(current) == Pos(target))
-                return Path = ReversePath(current).Reverse().ToList();
+		while (Active.Count > 0)
+		{
+			current = Active.Dequeue();
 
-            foreach (var neighbor in Neighbors(current).Where(n => Walkable!(Value(n), Value(current))))
-            {
-                if (Visited.Add(Pos(neighbor)))
-                {
-                    neighbor.Init(target, Cost!(Value(neighbor)), current);
-                    Active.Enqueue(neighbor, neighbor.Priority);
-                }
-            }
-        }
+			if (Pos(current) == Pos(target))
+				return Path = ReversePath(current).Reverse().ToList();
 
-        return Path;
-    }
+			foreach (var neighbor in Neighbors(current).Where(n => Walkable!(n.X, n.Y, Value(n), Value(current))))
+				if (Visited.Add(Pos(neighbor)))
+				{
+					neighbor.Init(target, Cost!(Value(neighbor)), current);
+					Active.Enqueue(neighbor, neighbor.Priority);
+				}
+		}
 
-    public IEnumerable<(int X, int Y)> BreadthFirstSearch((int X, int Y) start, (int X, int Y) end)
-    {
-        Path.Clear(); Visited.Clear();
+		return Path;
+	}
 
-        var previous = new Dictionary<(int, int), (int, int)>();
-        var active = new Queue<(int, int)>();
+	public IEnumerable<(int X, int Y)> BreadthFirstSearch((int X, int Y) start, (int X, int Y) end)
+	{
+		Path.Clear();
+		Visited.Clear();
 
-        Visited.Add(start);
-        active.Enqueue(start);
-        var current = start;
+		var previous = new Dictionary<(int, int), (int, int)>();
+		var active = new Queue<(int, int)>();
 
-        while (active.Count > 0)
-        {
-            current = active.Dequeue();
+		Visited.Add(start);
+		active.Enqueue(start);
+		var current = start;
 
-            if (current.Equals(end))
-                break;
+		while (active.Count > 0)
+		{
+			current = active.Dequeue();
 
-            foreach (var neighbor in Neighbors(current.X, current.Y)
-                .Where(neighbor => Walkable!(Value(neighbor), Value(current)) && Visited.Add(neighbor)))
-            {
-                previous[neighbor] = current;
-                active.Enqueue(neighbor);
-            }
-        }
+			if (current.Equals(end))
+				break;
 
-        return Path = ReversePath(current, start, previous).Reverse().ToList();
-    }
+			foreach (var neighbor in Neighbors(current.X, current.Y)
+						.Where(neighbor =>
+							Walkable!(neighbor.X, neighbor.Y, Value(neighbor), Value(current)) &&
+							Visited.Add(neighbor)))
+			{
+				previous[neighbor] = current;
+				active.Enqueue(neighbor);
+			}
+		}
 
-    private T Value((int X, int Y) node) => Map[node.Y][node.X];
-    private T Value(Node node) => Value((node.X, node.Y));
-    private static (int, int) Pos(Node node) => (node.X, node.Y);
+		return Path = ReversePath(current, start, previous).Reverse().ToList();
+	}
 
-    private IEnumerable<Node> Neighbors(Node current)
-    {
-        foreach (var (x, y) in Neighbors(current.X, current.Y))
-            yield return new Node { X = x, Y = y };
-    }
+	public (int, int) Find(Func<T, bool> predicate)
+	{
+		foreach (var (x, y) in from y in Enumerable.Range(0, Map.Length)
+				from x in Enumerable.Range(0, Map[0].Length)
+				select (x, y))
+			if (predicate(Map[y][x]))
+				return (x, y);
 
-    private IEnumerable<(int X, int Y)> Neighbors(int x, int y)
-    {
-        if (y > 0) yield return (x, y - 1);
-        if (x > 0) yield return (x - 1, y);
-        if (y < Map.Length - 1) yield return (x, y + 1);
-        if (x < Map[0].Length - 1) yield return (x + 1, y);
-    }
+		return default;
+	}
 
-    private static IEnumerable<(int X, int Y)> ReversePath((int X, int Y) current, (int X, int Y) start,
-        Dictionary<(int, int), (int, int)> previous)
-    {
-        while (!current.Equals(start))
-        {
-            yield return current;
-            current = previous[current];
-        }
-    }
+	private T Value((int X, int Y) node) => Map[node.Y][node.X];
+	private T Value(Node node) => Value((node.X, node.Y));
+	private static (int, int) Pos(Node node) => (node.X, node.Y);
 
-    private static IEnumerable<(int X, int Y)> ReversePath(Node current)
-    {
-        while (current.Previous != null)
-        {
-            yield return (current.X, current.Y);
-            current = current.Previous;
-        }
-    }
+	private IEnumerable<Node> Neighbors(Node current)
+	{
+		foreach (var (x, y) in Neighbors(current.X, current.Y))
+			yield return new Node { X = x, Y = y };
+	}
 
-    public string Print(char path = '.', char wall = default, char visited = default, char active = '?')
-    {
-        var b = new System.Text.StringBuilder();
+	private IEnumerable<(int X, int Y)> Neighbors(int x, int y)
+	{
+		if (y > 0) yield return (x, y - 1);
+		if (x > 0) yield return (x - 1, y);
+		if (y < Map.Length - 1) yield return (x, y + 1);
+		if (x < Map[0].Length - 1) yield return (x + 1, y);
+	}
 
-        foreach (var (x, y) in from y in Enumerable.Range(0, Map.Length)
-                               from x in Enumerable.Range(0, Map[0].Length + 1)
-                               select (x, y))
-        {
-            b.Append(x >= Map[0].Length ? '\n' : Path.Contains((x, y)) ? path :
-                visited != default && Active.UnorderedItems.Any(v => v.Element.X == x && v.Element.Y == y) ? active :
-                visited != default && Visited.Contains((x, y)) ? visited :
-                Walkable!(Map[y][x], Map[y][x]) ? '➰' : wall == default(char) ? Map[y][x] : wall);
-        }
+	private static IEnumerable<(int X, int Y)> ReversePath((int X, int Y) current, (int X, int Y) start,
+		Dictionary<(int, int), (int, int)> previous)
+	{
+		while (!current.Equals(start))
+		{
+			yield return current;
+			current = previous[current];
+		}
+	}
 
-        double efficiency = Path.Any() ? (double)Path.Count / Visited.Count : 0;
-        return b.ToString() + (Path.Any() ? $"Shortest path: {Path.Count} ({efficiency:P1})" : "");
-    }
+	private static IEnumerable<(int X, int Y)> ReversePath(Node current)
+	{
+		while (current.Previous != null)
+		{
+			yield return (current.X, current.Y);
+			current = current.Previous;
+		}
+	}
+
+	public string Print(char path = '.', char wall = default, char visited = default, char active = '?')
+	{
+		var b = new System.Text.StringBuilder();
+
+		foreach (var (x, y) in from y in Enumerable.Range(0, Map.Length)
+				from x in Enumerable.Range(0, Map[0].Length + 1)
+				select (x, y))
+			b.Append(x >= Map[0].Length ? '\n' :
+				Path.Contains((x, y)) ? path :
+				visited != default && Active.UnorderedItems.Any(v => v.Element.X == x && v.Element.Y == y) ? active :
+				visited != default && Visited.Contains((x, y)) ? visited :
+				Walkable!(x, y, Map[y][x], Map[y][x]) ? '➰' :
+				wall == default(char) ? Map[y][x] : wall);
+
+		var efficiency = Path.Any() ? (double)Path.Count / Visited.Count : 0;
+		return b.ToString() + (Path.Any() ? $"Shortest path: {Path.Count} ({efficiency:P1})" : "");
+	}
 }
