@@ -30,6 +30,27 @@ public static class Day5
 	private static bool Follows(this IEnumerable<int> update, int[] rule) =>
 		!rule.All(update.Contains) || update.Intersect(rule).SequenceEqual(rule);
 
-	private static int[] Correct(this IEnumerable<int> update, int[][] rules) =>
-		update.Permutations().First(u => rules.All(u.Follows)).ToArray();
+	private static int[] Correct(this IEnumerable<int> update, int[][] rules)
+	{
+		var pages = update.ToArray();
+
+		var violated = rules.FirstOrDefault(rule => !pages.Follows(rule));
+
+		while (violated != null)
+		{
+			pages = pages.Swap(violated.First(), violated.Last());
+
+			violated = rules.FirstOrDefault(rule => !pages.Follows(rule));
+		}
+
+		return pages;
+	}
+
+	private static int[] Swap(this int[] list, int a, int b)
+	{
+		list[Array.IndexOf(list, a)] = b;
+		list[Array.IndexOf(list, b)] = a;
+
+		return list;
+	}
 }
