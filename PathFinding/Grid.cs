@@ -31,6 +31,10 @@ public class Grid<T>
 
 	public List<(int X, int Y)> Path { get; private set; } = new();
 
+	public int Width => Map[0].Length;
+
+	public int Height => Map.Length;
+
 	public IEnumerable<(int X, int Y)> AStar((int X, int Y) start, (int X, int Y) end)
 	{
 		Path.Clear();
@@ -113,6 +117,8 @@ public class Grid<T>
 			if (predicate(Map[y][x]))
 				yield return (x, y);
 	}
+
+	public IEnumerable<T> GetSymbols() => Map.SelectMany(x => x).Distinct();
 
 	private T Value((int X, int Y) node) => Map[node.Y][node.X];
 	private T Value(Node node) => Value((node.X, node.Y));
