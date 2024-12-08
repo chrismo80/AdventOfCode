@@ -1,7 +1,3 @@
-using System.Diagnostics;
-using Extensions;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-
 namespace AdventOfCode2024;
 
 public static class Day6
@@ -14,9 +10,19 @@ public static class Day6
 		var current = new PathFinding.Grid<char>() { Map = map }
 			.Find((value) => value != '.' && value != '#');
 
-		var direction = map[current.Y][current.X];
+		var result1 = map.FindExit(current);
+		var result2 = map.PlaceObstacles().Count(variant => variant.FindExit(current) == 0);
 
+		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+	}
+
+	private static int FindExit(this char[][] map, (int X, int Y) current)
+	{
+		var direction = map[current.Y][current.X];
 		var visited = new HashSet<(int, int)>() { current };
+
+		var loopDetected = 100; // best guess
+		var visitedTwice = 0;
 
 		while (true)
 		{
@@ -25,17 +31,25 @@ public static class Day6
 			if (next.OutOfBounds(map))
 				break;
 
-			if (next.WallDetected(map))
+			if (next.ObstacleDetected(map))
 			{
 				direction = direction.TurnRight();
 				continue;
 			}
 
 			current = next;
-			visited.Add(current);
+
+			// try to detect endless loop by counting consecutive visits
+			if (!visited.Add(current))
+				visitedTwice++;
+			else
+				visitedTwice = 0;
+
+			if (visitedTwice >= loopDetected)
+				return 0;
 		}
 
-		Console.WriteLine($"Part 1: {visited.Count}, Part 2: {0}");
+		return visited.Count;
 	}
 
 	private static bool OutOfBounds(this (int X, int Y) location, char[][] map) =>
@@ -50,8 +64,8 @@ public static class Day6
 		_ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
 	};
 
-	private static bool WallDetected(this (int X, int Y) location, char[][] map) =>
-		map[location.Y][location.X] == '#';
+	private static bool ObstacleDetected(this (int X, int Y) location, char[][] map) =>
+		map[location.Y][location.X] == '#' || map[location.Y][location.X] == 'O';
 
 	private static char TurnRight(this char direction) => direction switch
 	{
@@ -61,4 +75,23 @@ public static class Day6
 		'<' => '^',
 		_ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
 	};
+
+	private static IEnumerable<char[][]> PlaceObstacles(this char[][] map)
+	{
+		var width = map[0].Length;
+
+		var flat = map.SelectMany(row => row).ToArray();
+
+		for (var i = 0; i < flat.Length; i++)
+		{
+			if (flat[i] != '.')
+				continue;
+
+			flat[i] = 'O';
+
+			yield return flat.Chunk(width).ToArray();
+
+			flat[i] = '.';
+		}
+	}
 }
