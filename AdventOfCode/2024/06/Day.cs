@@ -8,7 +8,7 @@ public static class Day6
 			.Select(row => row.ToArray()).ToArray();
 
 		var current = new PathFinding.Grid<char>() { Map = map }
-			.Find((value) => value != '.' && value != '#');
+			.Find((value) => value != '.' && value != '#').First();
 
 		var result1 = map.FindExit(current);
 		var result2 = map.PlaceObstacles().Count(variant => variant.FindExit(current) == 0);

@@ -105,15 +105,13 @@ public class Grid<T>
 		return Path = ReversePath(current, start, previous).Reverse().ToList();
 	}
 
-	public (int X, int Y) Find(Func<T, bool> predicate)
+	public IEnumerable<(int X, int Y)> Find(Func<T, bool> predicate)
 	{
 		foreach (var (x, y) in from y in Enumerable.Range(0, Map.Length)
 				from x in Enumerable.Range(0, Map[0].Length)
 				select (x, y))
 			if (predicate(Map[y][x]))
-				return (x, y);
-
-		return default;
+				yield return (x, y);
 	}
 
 	private T Value((int X, int Y) node) => Map[node.Y][node.X];
