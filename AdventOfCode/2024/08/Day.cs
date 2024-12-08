@@ -13,22 +13,26 @@ public static class Day8
 
 		var antennas = types.Select(type => map.Find((value) => value == type)).ToArray();
 
-		var antinodes = antennas.Select(type => type.FindAntinodes()).ToArray();
-
-		var result1 = antinodes.SelectMany(x => x).Distinct()
-			.Count(antinode => antinode.IsInBounds(map.Width, map.Height));
-
-		var result2 = 0;
+		var result1 = antennas.Count(map.Width, map.Height);
+		var result2 = antennas.Count(map.Width, map.Height, map.Width);
 
 		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
 	}
 
-	private static IEnumerable<(int X, int Y)> FindAntinodes(this IEnumerable<(int X, int Y)> antennas)
+	private static int Count(this IEnumerable<(int X, int Y)>[] antennas, int width, int height, int distance = 1) =>
+		antennas
+			.SelectMany(type => type.FindAntinodes(distance))
+			.Distinct()
+			.Count(antinode => antinode.IsInBounds(width, height));
+
+	private static IEnumerable<(int X, int Y)> FindAntinodes(this IEnumerable<(int X, int Y)> antennas,
+		int distance = 1)
 	{
 		foreach (var source in antennas)
 		foreach (var target in antennas)
-			if (source != target)
-				yield return (target.X + target.X - source.X, target.Y + target.Y - source.Y);
+			if (source != target || distance > 1)
+				foreach (var i in Enumerable.Range(1, distance))
+					yield return (i * (target.X - source.X) + target.X, i * (target.Y - source.Y) + target.Y);
 	}
 
 	private static bool IsInBounds(this (int X, int Y) pos, int width, int height) =>
