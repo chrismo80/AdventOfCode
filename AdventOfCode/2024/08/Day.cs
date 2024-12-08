@@ -16,7 +16,7 @@ public static class Day8
 		var antinodes = antennas.Select(type => type.FindAntinodes()).ToArray();
 
 		var result1 = antinodes.SelectMany(x => x).Distinct()
-			.Count(antinode => antinode.InBounds(map.Width, map.Height));
+			.Count(antinode => antinode.IsInBounds(map.Width, map.Height));
 
 		var result2 = 0;
 
@@ -28,12 +28,9 @@ public static class Day8
 		foreach (var source in antennas)
 		foreach (var target in antennas)
 			if (source != target)
-			{
-				var zebras = (target.X + target.X - source.X, target.Y + target.Y - source.Y);
-				yield return zebras;
-			}
+				yield return (target.X + target.X - source.X, target.Y + target.Y - source.Y);
 	}
 
-	private static bool InBounds(this (int X, int Y) pos, int width, int height) =>
+	private static bool IsInBounds(this (int X, int Y) pos, int width, int height) =>
 		pos.X >= 0 && pos.Y >= 0 && pos.X < width && pos.Y < height;
 }
