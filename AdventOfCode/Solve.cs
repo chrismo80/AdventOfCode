@@ -11,7 +11,7 @@ public static class Problem
 
 		long start = Stopwatch.GetTimestamp(), c = 0, runs = 1;
 
-		while (c++ < runs) AdventOfCode2024.Day8.Solve();
+		while (c++ < runs) AdventOfCode2024.Day9.Solve();
 
 		Console.WriteLine($"Duration: {Stopwatch.GetElapsedTime(start).Divide(runs).TotalMilliseconds:F1} ms");
 	}
