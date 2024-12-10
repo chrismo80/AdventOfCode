@@ -24,25 +24,39 @@ public static class Day9
 
 	private static char[] MoveSingle(this char[] list)
 	{
-		var index = list.Length - 1;
+		int left = 0, right = list.Length - 1;
 
-		for (var i = 0; i < list.Length; i++)
+		while (left++ < right)
 		{
-			if (list[i] != '.')
+			if (list[left] != '.')
 				continue;
 
-			while (list[index] == '.')
-				index--;
+			while (list[right] == '.')
+				right--;
 
-			list[i] = list[index];
-			list[index] = '.';
-
-			if (i > index)
-				break;
+			list[left] = list[right];
+			list[right] = '.';
 		}
 
 		return list;
 	}
 
-	private static char[] MoveBlock(this char[] list) => list;
+	private static char[] MoveBlock(this char[] list)
+	{
+		int left = 0, right = list.Length;
+
+		while (left < right--)
+		{
+			if (list[right] == '.')
+				continue;
+
+			while (list[left] != '.')
+				left++;
+
+			list[left] = list[right];
+			list[right] = '.';
+		}
+
+		return list;
+	}
 }
