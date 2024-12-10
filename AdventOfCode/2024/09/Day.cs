@@ -7,19 +7,8 @@ public static class Day9
 		var diskmap = File.ReadAllText("AdventOfCode/2024/09/Input.txt")
 			.GetDiskMap();
 
-		var filesystem = diskmap.ToArray();
-
-		while (filesystem.MoveSingle())
-		{ }
-
-		var result1 = filesystem.GetCheckSum();
-
-		filesystem = diskmap.ToArray();
-
-		while (filesystem.MoveBlock())
-		{ }
-
-		var result2 = filesystem.GetCheckSum();
+		var result1 = diskmap.ToArray().MoveSingle().GetCheckSum();
+		var result2 = diskmap.ToArray().MoveBlock().GetCheckSum();
 
 		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
 	}
@@ -33,29 +22,27 @@ public static class Day9
 	private static string Transform(this char item, int index) =>
 		new(Enumerable.Repeat(index % 2 == 0 ? (char)('0' + index / 2) : '.', item - '0').ToArray());
 
-	private static bool MoveSingle(this char[] list)
+	private static char[] MoveSingle(this char[] list)
 	{
-		var digit = list.Last(x => x != '.');
-		var dot = list.First(x => x == '.');
+		var index = list.Length - 1;
 
-		var digitIndex = Array.LastIndexOf(list, digit);
-		var dotIndex = Array.IndexOf(list, dot);
+		for (var i = 0; i < list.Length; i++)
+		{
+			if (list[i] != '.')
+				continue;
 
-		if (digitIndex < dotIndex)
-			return false;
+			while (list[index] == '.')
+				index--;
 
-		list[digitIndex] = dot;
-		list[dotIndex] = digit;
+			list[i] = list[index];
+			list[index] = '.';
 
-		return true;
+			if (i > index)
+				break;
+		}
+
+		return list;
 	}
 
-	private static bool MoveBlock(this char[] list)
-	{
-		var space = list.SkipWhile(x => x != '.').TakeWhile(x => x == '.');
-
-		Console.WriteLine(new string(list));
-
-		return false;
-	}
+	private static char[] MoveBlock(this char[] list) => list;
 }
