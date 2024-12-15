@@ -4,13 +4,8 @@ public static class Day11
 {
 	public static void Solve()
 	{
-		var input = File.ReadAllText("AdventOfCode/2024/11/Input.txt")
-			.Split(' ').Select(long.Parse).ToList();
-
-		var stones = new Dictionary<long, long>();
-
-		foreach (var stone in input)
-			stones.Update(stone, 1);
+		var stones = File.ReadAllText("AdventOfCode/2024/11/Input.txt")
+			.Split(' ').Select(long.Parse).ToDictionary(x => x, x => 1L);
 
 		var result1 = stones.Blink(25).Values.Sum();
 		var result2 = stones.Blink(75).Values.Sum();
