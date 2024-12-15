@@ -25,33 +25,28 @@ public static class Day13
 
 		public ClawMachine(string[] input)
 		{
-			var a = new Regex(@"(\d+)").Matches(input[0]);
-			var b = new Regex(@"(\d+)").Matches(input[1]);
-			var p = new Regex(@"(\d+)").Matches(input[2]);
+			var regex = new Regex(@"(\d+)");
+
+			var a = regex.Matches(input[0]);
+			var b = regex.Matches(input[1]);
+			var p = regex.Matches(input[2]);
 
 			ButtonA = (long.Parse(a[0].Value), long.Parse(a[1].Value));
 			ButtonB = (long.Parse(b[0].Value), long.Parse(b[1].Value));
-			Prize =
-			(
-				long.Parse(p[0].Value) + 0,
-				long.Parse(p[1].Value) + 0
-			);
+			Prize = (long.Parse(p[0].Value), long.Parse(p[1].Value));
 		}
 
 		public long CheapestTokens()
 		{
 			var routes = FindRoutes();
 
-			if (!routes.Any())
-				return 0;
-
-			return routes.Select(r => r.A * 3 + r.B).Min();
+			return routes.Any() ? routes.Select(r => r.A * 3 + r.B).Min() : 0;
 		}
 
-		private IEnumerable<(long A, long B)> FindRoutes()
+		private IEnumerable<(long A, long B)> FindRoutes(int max = 100)
 		{
-			for (var a = 0; a < 100; a++)
-			for (var b = 0; b < 100; b++)
+			for (var a = 0; a < max; a++)
+			for (var b = 0; b < max; b++)
 				if (ButtonA.X * a + ButtonB.X * b == Prize.X &&
 					ButtonA.Y * a + ButtonB.Y * b == Prize.Y)
 					yield return (a, b);
