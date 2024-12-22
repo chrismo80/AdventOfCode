@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using AdventOfCode;
 using Extensions;
 
@@ -9,15 +8,9 @@ public static class Day14
 	public static void Solve()
 	{
 		var robots = Input.LoadLines(2024, 14)
-			.Select(row => new Regex(@"p\=(-?\d+)\,(-?\d+)\ v\=(-?\d+)\,(-?\d+)").Match(row))
-			.Select(m => new Robot()
-				{
-					X = int.Parse(m.Groups[1].Value),
-					Y = int.Parse(m.Groups[2].Value),
-					VeloX = int.Parse(m.Groups[3].Value),
-					VeloY = int.Parse(m.Groups[4].Value)
-				}
-			).ToArray();
+			.FromRegex(@"p\=(-?\d+)\,(-?\d+)\ v\=(-?\d+)\,(-?\d+)")
+			.Select(groups => new Robot(groups))
+			.ToArray();
 
 		int width = 101, height = 103;
 
@@ -60,12 +53,13 @@ public static class Day14
 			.Select(g => g.Count())
 			.Product();
 
-	private class Robot
+	private class Robot(string[] input)
 	{
-		public int X { get; set; }
-		public int Y { get; set; }
-		public int VeloX { get; init; }
-		public int VeloY { get; init; }
+		public int X { get; private set; } = int.Parse(input[0]);
+		public int Y { get; private set; } = int.Parse(input[1]);
+
+		private int VeloX { get; } = int.Parse(input[2]);
+		private int VeloY { get; } = int.Parse(input[3]);
 
 		public void Move(int width, int height)
 		{
