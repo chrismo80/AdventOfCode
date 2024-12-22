@@ -7,7 +7,7 @@ public static class Day7
 {
 	public static void Solve()
 	{
-		var input = Helper.LoadLines(2024, 7)
+		var input = Input.LoadLines(2024, 7)
 			.Select(row =>
 				(
 					Test: long.Parse(row.Split(": ").First()),

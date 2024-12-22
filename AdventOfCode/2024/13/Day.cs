@@ -7,7 +7,7 @@ public static class Day13
 {
 	public static void Solve()
 	{
-		var clawMachines = Helper.Load(2024, 13)
+		var clawMachines = Input.Load(2024, 13)
 			.Split("\n\n")
 			.Select(input => new ClawMachine(input.Split('\n')))
 			.ToArray();

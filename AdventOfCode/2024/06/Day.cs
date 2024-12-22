@@ -6,7 +6,7 @@ public static class Day6
 {
 	public static void Solve()
 	{
-		var map = Helper.Load(2024, 6).ToMap();
+		var map = Input.Load(2024, 6).ToMap();
 
 		var current = new PathFinding.Grid<char>() { Map = map }
 			.Find((value) => value != '.' && value != '#').First();

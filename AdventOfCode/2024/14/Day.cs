@@ -8,7 +8,7 @@ public static class Day14
 {
 	public static void Solve()
 	{
-		var robots = Helper.LoadLines(2024, 14)
+		var robots = Input.LoadLines(2024, 14)
 			.Select(row => new Regex(@"p\=(-?\d+)\,(-?\d+)\ v\=(-?\d+)\,(-?\d+)").Match(row))
 			.Select(m => new Robot()
 				{

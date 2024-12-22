@@ -6,7 +6,7 @@ public static class Day2
 {
 	public static void Solve()
 	{
-		var reports = Helper.Load(2024, 2).ToNestedArray<int>("\n", " ");
+		var reports = Input.Load(2024, 2).ToNestedArray<int>("\n", " ");
 
 		var safeReports = reports.Where(l => IsSafe(Diffs(l)));
 

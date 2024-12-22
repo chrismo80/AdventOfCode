@@ -6,7 +6,7 @@ public static class Day8
 {
 	public static void Solve()
 	{
-		var grid = new PathFinding.Grid<char>() { Map = Helper.Load(2024, 8).ToMap() };
+		var grid = new PathFinding.Grid<char>() { Map = Input.Load(2024, 8).ToMap() };
 
 		var types = grid.GetSymbols().Except(['.']);
 

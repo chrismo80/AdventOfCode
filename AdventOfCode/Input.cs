@@ -21,7 +21,7 @@ public static class StringExtensions
 		input.Split('\n').Select(row => row.ToArray()).ToArray();
 }
 
-public static class Helper
+public static class Input
 {
 	public static string Load(int year, int day) =>
 		File.ReadAllText(FileName(year, day));
