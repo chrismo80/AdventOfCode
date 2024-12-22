@@ -22,13 +22,8 @@ public static class StringExtensions
 	public static char[][] ToMap(this string input) =>
 		input.Split('\n').Select(row => row.ToArray()).ToArray();
 
-	public static IEnumerable<string[]> FromRegex(this string[] lines, string pattern)
-	{
-		var regex = new Regex(pattern);
-
-		foreach (var line in lines)
-			yield return regex.Match(line).Groups.Values.Skip(1).Select(v => v.Value).ToArray();
-	}
+	public static IEnumerable<string[]> Match(this string[] lines, Regex regex) =>
+		lines.Select(line => regex.Match(line).Groups.Values.Skip(1).Select(v => v.Value).ToArray());
 }
 
 public static class Input

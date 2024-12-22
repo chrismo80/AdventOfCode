@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using AdventOfCode;
 using Extensions;
 
@@ -8,7 +9,7 @@ public static class Day14
 	public static void Solve()
 	{
 		var robots = Input.LoadLines(2024, 14)
-			.FromRegex(@"p\=(-?\d+)\,(-?\d+)\ v\=(-?\d+)\,(-?\d+)")
+			.Match(new Regex(@"p\=(-?\d+)\,(-?\d+)\ v\=(-?\d+)\,(-?\d+)"))
 			.Select(groups => new Robot(groups))
 			.ToArray();
 
