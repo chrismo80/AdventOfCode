@@ -1,10 +1,12 @@
+using Extensions;
+
 namespace AdventOfCode2024;
 
 public static class Day11
 {
 	public static void Solve()
 	{
-		var stones = File.ReadAllText("AdventOfCode/2024/11/Input.txt")
+		var stones = Input.Load(2024, 11)
 			.Split(' ').Select(long.Parse).ToDictionary(x => x, x => 1L);
 
 		var result1 = stones.Blink(25).Values.Sum();

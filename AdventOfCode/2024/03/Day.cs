@@ -7,7 +7,7 @@ public static class Day3
 {
 	public static void Solve()
 	{
-		var input = File.ReadAllText("AdventOfCode/2024/03/Input.txt");
+		var input = Input.Load(2024, 3);
 
 		var matches = new Regex(@"mul\((\d+)\,(\d+)\)|do\(\)|don\'t\(\)").Matches(input);
 

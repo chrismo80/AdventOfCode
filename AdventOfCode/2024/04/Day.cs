@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Extensions;
 
 namespace AdventOfCode2024;
 
@@ -6,8 +7,7 @@ public static class Day4
 {
 	public static void Solve()
 	{
-		var input = File.ReadAllLines("AdventOfCode/2024/04/Input.txt")
-			.Select(line => line.ToArray()).ToArray();
+		var input = Input.Load(2024, 4).ToMap();
 
 		var result1 = GetLines(input)
 			.Select(line => Regex.Matches(line, "XMAS").Count)

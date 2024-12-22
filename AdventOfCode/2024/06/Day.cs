@@ -1,11 +1,12 @@
+using Extensions;
+
 namespace AdventOfCode2024;
 
 public static class Day6
 {
 	public static void Solve()
 	{
-		var map = File.ReadAllLines("AdventOfCode/2024/06/Input.txt")
-			.Select(row => row.ToArray()).ToArray();
+		var map = Input.Load(2024, 6).ToMap();
 
 		var current = new PathFinding.Grid<char>() { Map = map }
 			.Find((value) => value != '.' && value != '#').First();

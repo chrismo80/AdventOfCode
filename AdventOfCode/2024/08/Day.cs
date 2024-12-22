@@ -1,20 +1,19 @@
+using Extensions;
+
 namespace AdventOfCode2024;
 
 public static class Day8
 {
 	public static void Solve()
 	{
-		var input = File.ReadAllLines("AdventOfCode/2024/08/Input.txt")
-			.Select(row => row.ToArray()).ToArray();
+		var grid = new PathFinding.Grid<char>() { Map = Input.Load(2024, 8).ToMap() };
 
-		var map = new PathFinding.Grid<char>() { Map = input };
+		var types = grid.GetSymbols().Except(['.']);
 
-		var types = map.GetSymbols().Except(['.']);
+		var antennas = types.Select(type => grid.Find((value) => value == type)).ToArray();
 
-		var antennas = types.Select(type => map.Find((value) => value == type)).ToArray();
-
-		var result1 = antennas.Count(map.Width, map.Height);
-		var result2 = antennas.Count(map.Width, map.Height, map.Width);
+		var result1 = antennas.Count(grid.Width, grid.Height);
+		var result2 = antennas.Count(grid.Width, grid.Height, grid.Width);
 
 		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
 	}

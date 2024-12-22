@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Extensions;
 
 namespace AdventOfCode2024;
 
@@ -6,7 +7,7 @@ public static class Day13
 {
 	public static void Solve()
 	{
-		var clawMachines = File.ReadAllText("AdventOfCode/2024/13/Input.txt")
+		var clawMachines = Input.Load(2024, 13)
 			.Split("\n\n")
 			.Select(input => new ClawMachine(input.Split('\n')))
 			.ToArray();

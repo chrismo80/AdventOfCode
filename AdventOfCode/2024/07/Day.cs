@@ -6,7 +6,7 @@ public static class Day7
 {
 	public static void Solve()
 	{
-		var input = File.ReadAllLines("AdventOfCode/2024/07/Input.txt")
+		var input = Input.LoadLines(2024, 7)
 			.Select(row =>
 				(
 					Test: long.Parse(row.Split(": ").First()),

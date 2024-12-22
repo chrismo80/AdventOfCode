@@ -1,11 +1,12 @@
+using Extensions;
+
 namespace AdventOfCode2024;
 
 public static class Day9
 {
 	public static void Solve()
 	{
-		var diskmap = File.ReadAllText("AdventOfCode/2024/09/Input.txt")
-			.GetDiskMap();
+		var diskmap = Input.Load(2024, 9).GetDiskMap();
 
 		var result1 = diskmap.ToArray().MoveSingle().GetCheckSum();
 		var result2 = diskmap.ToArray().MoveBlocks().GetCheckSum();

@@ -7,8 +7,7 @@ public static class Day5
 {
 	public static void Solve()
 	{
-		var input = File.ReadAllText("AdventOfCode/2024/05/Input.txt")
-			.Split("\n\n");
+		var input = Input.Load(2024, 5).ToArray<string>("\n\n");
 
 		var rules = input.First().Split('\n')
 			.Select(x => x.Split('|').Select(int.Parse).ToArray())

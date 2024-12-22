@@ -7,7 +7,7 @@ public static class Day14
 {
 	public static void Solve()
 	{
-		var robots = File.ReadAllLines("AdventOfCode/2024/14/Input.txt")
+		var robots = Input.LoadLines(2024, 14)
 			.Select(row => new Regex(@"p\=(-?\d+)\,(-?\d+)\ v\=(-?\d+)\,(-?\d+)").Match(row))
 			.Select(m => new Robot()
 				{
