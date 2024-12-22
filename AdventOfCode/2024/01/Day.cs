@@ -1,4 +1,4 @@
-using Extensions;
+using AdventOfCode;
 
 namespace AdventOfCode2024;
 
@@ -6,7 +6,7 @@ public static class Day1
 {
 	public static void Solve()
 	{
-		var input = Input.Load(2024, 1).ToNestedArray<int>("\n", " ");
+		var input = Helper.Load(2024, 1).ToNestedArray<int>("\n", " ");
 
 		var left = input.Select(x => x.First()).Order().ToList();
 		var right = input.Select(x => x.Last()).Order().ToList();

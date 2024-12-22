@@ -1,4 +1,4 @@
-using Extensions;
+using AdventOfCode;
 
 namespace AdventOfCode2024;
 
@@ -6,7 +6,7 @@ public static class Day9
 {
 	public static void Solve()
 	{
-		var diskmap = Input.Load(2024, 9).GetDiskMap();
+		var diskmap = Helper.Load(2024, 9).GetDiskMap();
 
 		var result1 = diskmap.ToArray().MoveSingle().GetCheckSum();
 		var result2 = diskmap.ToArray().MoveBlocks().GetCheckSum();

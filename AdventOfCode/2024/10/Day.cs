@@ -1,4 +1,4 @@
-using Extensions;
+using AdventOfCode;
 
 namespace AdventOfCode2024;
 
@@ -6,7 +6,7 @@ public static class Day10
 {
 	public static void Solve()
 	{
-		var map = Input.Load(2024, 10).ToMap();
+		var map = Helper.Load(2024, 10).ToMap();
 
 		var trails = new List<List<(int, int)>>();
 

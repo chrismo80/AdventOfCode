@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using AdventOfCode;
 using Extensions;
 
 namespace AdventOfCode2024;
@@ -7,7 +8,7 @@ public static class Day3
 {
 	public static void Solve()
 	{
-		var input = Input.Load(2024, 3);
+		var input = Helper.Load(2024, 3);
 
 		var matches = new Regex(@"mul\((\d+)\,(\d+)\)|do\(\)|don\'t\(\)").Matches(input);
 
