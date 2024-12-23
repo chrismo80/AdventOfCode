@@ -8,8 +8,8 @@ public static class Day14
 {
 	public static void Solve()
 	{
-		var robots = Input.LoadLines(2024, 14)
-			.Match(new Regex(@"p\=(-?\d+)\,(-?\d+)\ v\=(-?\d+)\,(-?\d+)"))
+		var robots = Input.Load(2024, 14).Lines()
+			.Match<int>(new Regex(@"p\=(-?\d+)\,(-?\d+)\ v\=(-?\d+)\,(-?\d+)"))
 			.Select(groups => new Robot(groups))
 			.ToArray();
 
@@ -54,13 +54,13 @@ public static class Day14
 			.Select(g => g.Count())
 			.Product();
 
-	private class Robot(string[] input)
+	private class Robot(int[] input)
 	{
-		public int X { get; private set; } = int.Parse(input[0]);
-		public int Y { get; private set; } = int.Parse(input[1]);
+		public int X { get; private set; } = input[0];
+		public int Y { get; private set; } = input[1];
 
-		private int VeloX { get; } = int.Parse(input[2]);
-		private int VeloY { get; } = int.Parse(input[3]);
+		private int VeloX { get; } = input[2];
+		private int VeloY { get; } = input[3];
 
 		public void Move(int width, int height)
 		{

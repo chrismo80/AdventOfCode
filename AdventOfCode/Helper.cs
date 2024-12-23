@@ -2,11 +2,17 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode;
 
-public static class StringExtensions
+public static class Parser
 {
+	public static string[] Lines(this string input) =>
+		input.Split('\n');
+
+	public static char[][] ToMap(this string input) =>
+		input.Lines().Select(row => row.ToArray()).ToArray();
+
 	public static T[] ToArray<T>(this string input, string delimiter) =>
 		input.Split(delimiter, StringSplitOptions.RemoveEmptyEntries)
-			.Select(item => (T)Convert.ChangeType(item, typeof(T)))
+			.ConvertTo<T>()
 			.ToArray();
 
 	public static T[][] ToNestedArray<T>(this string input, string delim1, string delim2) =>
@@ -19,20 +25,21 @@ public static class StringExtensions
 			.Select(item => item.ToNestedArray<T>(d2, d3))
 			.ToArray();
 
-	public static char[][] ToMap(this string input) =>
-		input.Split('\n').Select(row => row.ToArray()).ToArray();
-
 	public static IEnumerable<string[]> Match(this string[] lines, Regex regex) =>
 		lines.Select(line => regex.Match(line).Groups.Values.Skip(1).Select(v => v.Value).ToArray());
+
+	public static IEnumerable<T[]> Match<T>(this string[] lines, Regex regex) =>
+		lines.Select(line => regex.Match(line).Groups.Values.Skip(1)
+			.Select(v => v.Value).ConvertTo<T>().ToArray());
+
+	public static IEnumerable<T> ConvertTo<T>(this IEnumerable<string> items) =>
+		items.Select(item => (T)Convert.ChangeType(item, typeof(T)));
 }
 
 public static class Input
 {
 	public static string Load(int year, int day) =>
 		File.ReadAllText(FileName(year, day));
-
-	public static string[] LoadLines(int year, int day) =>
-		File.ReadAllLines(FileName(year, day));
 
 	private static string FileName(int year, int day) =>
 		$"AdventOfCode/{year}/{day:00}/Input.txt";
