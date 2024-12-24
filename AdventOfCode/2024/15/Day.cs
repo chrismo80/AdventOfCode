@@ -10,6 +10,7 @@ public static class Day15
 
 		var map = input[0].ToMap();
 
+		var walls = map.Find('#').ToHashSet();
 		var boxes = map.Find('O').ToHashSet();
 		var robot = map.Find('@').First();
 
@@ -17,7 +18,7 @@ public static class Day15
 		{
 			var stack = boxes.FindStack(robot, move).ToList();
 
-			if (map[stack.Last().Y][stack.Last().X] == '#')
+			if (walls.Contains(stack.Last()))
 				continue;
 
 			robot = stack.First();
@@ -49,10 +50,10 @@ public static class Day15
 
 	private static (int X, int Y) Next(this (int X, int Y) location, char direction) => direction switch
 	{
-		'^' => (X: location.X, Y: location.Y - 1),
-		'v' => (X: location.X, Y: location.Y + 1),
-		'<' => (X: location.X - 1, Y: location.Y),
-		'>' => (X: location.X + 1, Y: location.Y),
+		'^' => location with { Y = location.Y - 1 },
+		'v' => location with { Y = location.Y + 1 },
+		'<' => location with { X = location.X - 1 },
+		'>' => location with { X = location.X + 1 },
 		_ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
 	};
 }
