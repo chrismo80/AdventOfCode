@@ -11,23 +11,21 @@ public static class Day15
 		var map = input[0].ToMap();
 		var moves = input[1].Replace("\n", "");
 
-		var grid = new PathFinding.Grid<char>() { Map = map };
-
-		var boxes = grid.Find((x) => x == 'O').ToHashSet();
-		var robot = grid.Find((x) => x == '@').First();
+		var boxes = map.Find('O').ToHashSet();
+		var robot = map.Find('@').First();
 
 		foreach (var move in moves)
 		{
-			var track = boxes.FindTrack(robot, move).ToList();
+			var track = boxes.FindStack(robot, move).ToList();
 
 			if (map[track.Last().Y][track.Last().X] == '#')
 				continue;
 
+			robot = track.First();
+			boxes.Remove(robot);
+
 			foreach (var pos in track.Skip(1))
 				boxes.Add(pos);
-
-			boxes.Remove(track.First());
-			robot = track.First();
 		}
 
 		var result1 = boxes.Select(b => b.Y * 100 + b.X).Sum();
@@ -36,15 +34,15 @@ public static class Day15
 		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
 	}
 
-	private static IEnumerable<(int X, int Y)> FindTrack(this HashSet<(int X, int Y)> boxes,
+	private static IEnumerable<(int X, int Y)> FindStack(this HashSet<(int X, int Y)> boxes,
 		(int X, int Y) pos, char move)
 	{
-		pos = Next(pos, move);
+		pos = pos.Next(move);
 
 		while (boxes.Contains(pos))
 		{
 			yield return pos;
-			pos = Next(pos, move);
+			pos = pos.Next(move);
 		}
 
 		yield return pos;
