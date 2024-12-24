@@ -16,11 +16,9 @@ public static class Day15
 		var boxes = grid.Find((x) => x == 'O').ToHashSet();
 		var robot = grid.Find((x) => x == '@').First();
 
-		var shift = map.FindTrack((4, 6), '^', boxes);
-
 		foreach (var move in moves)
 		{
-			var track = map.FindTrack(robot, move, boxes).ToList();
+			var track = boxes.FindTrack(robot, move).ToList();
 
 			if (map[track.Last().Y][track.Last().X] == '#')
 				continue;
@@ -38,15 +36,15 @@ public static class Day15
 		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
 	}
 
-	private static IEnumerable<(int X, int Y)> FindTrack(this char[][] map,
-		(int X, int Y) pos, char move, HashSet<(int X, int Y)>? boxes)
+	private static IEnumerable<(int X, int Y)> FindTrack(this HashSet<(int X, int Y)> boxes,
+		(int X, int Y) pos, char move)
 	{
 		pos = Next(pos, move);
 
 		yield return pos;
 
-		if (!pos.OutOfBounds(map) && boxes.Contains(pos))
-			foreach (var next in map.FindTrack(pos, move, boxes))
+		if (boxes.Contains(pos))
+			foreach (var next in boxes.FindTrack(pos, move))
 				yield return next;
 	}
 
@@ -58,7 +56,4 @@ public static class Day15
 		'>' => (X: location.X + 1, Y: location.Y),
 		_ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
 	};
-
-	private static bool OutOfBounds(this (int X, int Y) location, char[][] map) =>
-		location.X < 0 || location.Y < 0 || location.X >= map.Length || location.Y >= map[0].Length;
 }
