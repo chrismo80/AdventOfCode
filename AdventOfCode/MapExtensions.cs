@@ -48,11 +48,15 @@ public static class MapExtensions
 			var current = active.Dequeue();
 
 			if (current.Equals(end))
+			{
 				while (!current.Equals(start))
 				{
 					yield return current;
 					current = previous[current];
 				}
+
+				yield break;
+			}
 
 			foreach (var neighbor in walkableNeighbors(current).Where(n => visited.Add(n)))
 			{
