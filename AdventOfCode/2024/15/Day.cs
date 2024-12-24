@@ -41,11 +41,13 @@ public static class Day15
 	{
 		pos = Next(pos, move);
 
-		yield return pos;
+		while (boxes.Contains(pos))
+		{
+			yield return pos;
+			pos = Next(pos, move);
+		}
 
-		if (boxes.Contains(pos))
-			foreach (var next in boxes.FindTrack(pos, move))
-				yield return next;
+		yield return pos;
 	}
 
 	private static (int X, int Y) Next(this (int X, int Y) location, char direction) => direction switch
