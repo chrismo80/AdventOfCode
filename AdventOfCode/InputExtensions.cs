@@ -16,11 +16,6 @@ public static class InputExtensions
 	public static string[] Lines(this string input) =>
 		input.Split('\n');
 
-	public static char[][] ToMap(this string input) =>
-		input.Lines()
-			.Select(row => row.ToArray())
-			.ToArray();
-
 	public static T[] ToArray<T>(this string input, string delimiter) =>
 		input.Split(delimiter, StringSplitOptions.RemoveEmptyEntries)
 			.ConvertTo<T>()
@@ -46,12 +41,4 @@ public static class InputExtensions
 
 	public static IEnumerable<T> ConvertTo<T>(this IEnumerable<string> items) =>
 		items.Select(item => (T)Convert.ChangeType(item, typeof(T)));
-
-	public static IEnumerable<(int X, int Y)> Find<T>(this T[][] map, T value)
-	{
-		for (var y = 0; y < map.Length; y++)
-		for (var x = 0; x < map[0].Length; x++)
-			if (value.Equals(map[y][x]))
-				yield return (x, y);
-	}
 }
