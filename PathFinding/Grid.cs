@@ -174,4 +174,18 @@ public class Grid<T>
 		var efficiency = Path.Any() ? (double)Path.Count / Visited.Count : 0;
 		return b.ToString() + (Path.Any() ? $"Shortest path: {Path.Count} ({efficiency:P1})" : "");
 	}
+
+	public string PrintRaw()
+	{
+		var b = new System.Text.StringBuilder();
+
+		for (var y = 0; y < Map.Length; y++)
+		{
+			for (var x = 0; x < Map[0].Length; x++)
+				b.Append(Map[y][x]);
+			b.AppendLine();
+		}
+
+		return b.ToString();
+	}
 }
