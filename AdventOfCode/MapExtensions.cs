@@ -43,11 +43,9 @@ public static class MapExtensions
 
 		active.Enqueue(start);
 
-		var current = start;
-
 		while (active.Count > 0)
 		{
-			current = active.Dequeue();
+			var current = active.Dequeue();
 
 			if (current.Equals(end))
 				while (!current.Equals(start))
