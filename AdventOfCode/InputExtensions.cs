@@ -4,11 +4,11 @@ namespace AdventOfCode;
 
 public static class Input
 {
-	public static string Load(int year, int day) =>
-		File.ReadAllText(FileName(year, day));
+	public static string Load(int year, int day, string file = "Input") =>
+		File.ReadAllText(FileName(year, day, file));
 
-	private static string FileName(int year, int day) =>
-		$"AdventOfCode/{year}/{day:00}/Input.txt";
+	private static string FileName(int year, int day, string file) =>
+		$"../../../AdventOfCode/{year}/{day:00}/{file}.txt";
 }
 
 public static class InputExtensions
