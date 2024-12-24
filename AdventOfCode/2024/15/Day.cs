@@ -9,23 +9,22 @@ public static class Day15
 		var input = Input.Load(2024, 15).ToArray<string>("\n\n");
 
 		var map = input[0].ToMap();
-		var moves = input[1].Replace("\n", "");
 
 		var boxes = map.Find('O').ToHashSet();
 		var robot = map.Find('@').First();
 
-		foreach (var move in moves)
+		foreach (var move in input[1].Where(c => c != '\n'))
 		{
-			var track = boxes.FindStack(robot, move).ToList();
+			var stack = boxes.FindStack(robot, move).ToList();
 
-			if (map[track.Last().Y][track.Last().X] == '#')
+			if (map[stack.Last().Y][stack.Last().X] == '#')
 				continue;
 
-			robot = track.First();
+			robot = stack.First();
 			boxes.Remove(robot);
 
-			foreach (var pos in track.Skip(1))
-				boxes.Add(pos);
+			foreach (var pos in stack.Skip(1))
+				boxes.Add(stack.Last());
 		}
 
 		var result1 = boxes.Select(b => b.Y * 100 + b.X).Sum();
