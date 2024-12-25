@@ -43,9 +43,7 @@ public static class MapExtensions
 		(int, int) start, (int, int) end)
 	{
 		var visited = new Dictionary<(int, int), (int, int)>();
-		var active = new Queue<(int, int)>();
-
-		active.Enqueue(start);
+		var active = new Queue<(int, int)>([start]);
 
 		while (active.TryDequeue(out var current) && !current.Equals(end))
 			foreach (var neighbor in walkableNeighbors(current).Where(neighbor => !visited.ContainsKey(neighbor)))
