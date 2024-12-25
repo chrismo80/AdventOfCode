@@ -5,7 +5,7 @@ public static class MapExtensions
 	public static char[][] ToMap(this string input) =>
 		input.Lines().Select(row => row.ToArray()).ToArray();
 
-	public static void Print(this char[][] map, List<(int, int)> path = null)
+	public static string Print(this char[][] map, List<(int, int)> path = null)
 	{
 		var s = new System.Text.StringBuilder();
 
@@ -21,6 +21,8 @@ public static class MapExtensions
 		}
 
 		Console.WriteLine(s);
+
+		return s.ToString();
 	}
 
 	public static IEnumerable<(int X, int Y)> Find<T>(this T[][] map, T value)
@@ -55,7 +57,7 @@ public static class MapExtensions
 		return visited.Path(end, start).Reverse();
 	}
 
-	private static IEnumerable<T> Path<T>(this Dictionary<T, T> visited, T end, T start)
+	public static IEnumerable<T> Path<T>(this Dictionary<T, T> visited, T end, T start)
 		where T : notnull
 	{
 		if (!visited.TryGetValue(end, out var pos))

@@ -11,6 +11,15 @@ public static class Input
 		$"../../../AdventOfCode/{year}/{day:00}/{file}.txt";
 }
 
+public static class Output
+{
+	public static void Save(int year, int day, string text, string file = "Output") =>
+		File.WriteAllText(FileName(year, day, file), text);
+
+	private static string FileName(int year, int day, string file) =>
+		$"../../../AdventOfCode/{year}/{day:00}/{file}.txt";
+}
+
 public static class InputExtensions
 {
 	public static string[] Lines(this string input) =>
