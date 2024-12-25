@@ -69,4 +69,16 @@ public static class MapExtensions
 			pos = visited[pos];
 		}
 	}
+
+	public static IEnumerable<T> Fill<T>(this Func<T, IEnumerable<T>> walkableNeighbors, T start)
+	{
+		var visited = new HashSet<T>();
+		var active = new Queue<T>([start]);
+
+		while (active.TryDequeue(out var current))
+			foreach (var neighbor in walkableNeighbors(current).Where(n => visited.Add(n)))
+				active.Enqueue(neighbor);
+
+		return visited;
+	}
 }
