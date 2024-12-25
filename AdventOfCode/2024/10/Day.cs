@@ -14,7 +14,7 @@ public static class Day10
 		var walkable = ((int X, int Y) pos) => pos.Neighbors(map[0].Length, map.Length)
 			.Where(n => map[n.Y][n.X] - map[pos.Y][pos.X] == 1);
 
-		var trails = starts.Select(s => ends.Select(e => walkable.FindTrails(s, e))).ToList();
+		var trails = starts.Select(start => ends.Select(end => walkable.FindTrails(start, end))).ToList();
 
 		var result1 = trails.Sum(trail => trail.Count(t => t > 0));
 		var result2 = trails.Sum(trail => trail.Sum());
