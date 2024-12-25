@@ -42,26 +42,25 @@ public static class MapExtensions
 	public static IEnumerable<(int, int)> Bfs(this Func<(int, int), IEnumerable<(int, int)>> walkableNeighbors,
 		(int, int) start, (int, int) end)
 	{
-		var previous = new Dictionary<(int, int), (int, int)>();
-		var visited = new HashSet<(int, int)> { start };
+		var visited = new Dictionary<(int, int), (int, int)>();
 		var active = new Queue<(int, int)>();
 
 		active.Enqueue(start);
 
 		while (active.TryDequeue(out var current) && !current.Equals(end))
-			foreach (var neighbor in walkableNeighbors(current).Where(n => visited.Add(n)))
+			foreach (var neighbor in walkableNeighbors(current).Where(neighbor => !visited.ContainsKey(neighbor)))
 			{
-				previous[neighbor] = current;
+				visited[neighbor] = current;
 				active.Enqueue(neighbor);
 			}
 
-		return previous.Path(end, start).Reverse();
+		return visited.Path(end, start).Reverse();
 	}
 
-	private static IEnumerable<(int, int)> Path(this Dictionary<(int, int), (int, int)> previous,
+	private static IEnumerable<(int, int)> Path(this Dictionary<(int, int), (int, int)> visited,
 		(int, int) end, (int, int) start)
 	{
-		if (!previous.TryGetValue(end, out var pos))
+		if (!visited.TryGetValue(end, out var pos))
 			yield break;
 
 		yield return end;
@@ -69,7 +68,7 @@ public static class MapExtensions
 		while (!pos.Equals(start))
 		{
 			yield return pos;
-			pos = previous[pos];
+			pos = visited[pos];
 		}
 	}
 }

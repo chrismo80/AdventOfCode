@@ -9,7 +9,8 @@ public static class Day18
 		var input = Input.Load(2024, 18).ToNestedArray<int>("\n", ",")
 			.Select(d => (d.First(), d.Last())).ToArray();
 
-		var walkable = ((int, int) pos) => pos.Neighbors(71, 71).Except(input.Take(1024));
+		var walkable = ((int, int) pos) => pos.Neighbors(71, 71)
+			.Where(n => !input.Take(1024).Contains(n));
 
 		var result1 = walkable.Bfs((0, 0), (70, 70)).Count();
 		var result2 = FindCutOff(input);
@@ -23,7 +24,8 @@ public static class Day18
 
 		while (c-- > 0)
 		{
-			var walkable = ((int, int) pos) => pos.Neighbors(71, 71).Except(bytes.Take(c));
+			var walkable = ((int, int) pos) => pos.Neighbors(71, 71)
+				.Where(n => !bytes.Take(c).Contains(n));
 
 			if (walkable.Bfs((0, 0), (70, 70)).Any())
 				return bytes[c];
