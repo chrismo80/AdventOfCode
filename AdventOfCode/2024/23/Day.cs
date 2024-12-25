@@ -8,33 +8,27 @@ public static class Day23
 	{
 		var input = Input.Load(2024, 23)
 			.ToNestedArray<string>("\n", "-")
-			.Select(c => c.Order().ToArray())
+			.Select(c => string.Join("-", c.Order()))
 			.Distinct()
+			.Order()
 			.ToArray();
 
 		var cirles = new HashSet<string>();
 
-		var i = 1;
 		foreach (var c1 in input)
+		foreach (var c2 in input)
 		{
-			Console.WriteLine(i++);
+			var tuple = c1.Split("-").Concat(c2.Split("-")).Distinct().Order();
 
-			foreach (var c2 in input)
-			{
-				if (c1.SequenceEqual(c2))
-					continue;
+			if (tuple.Count() != 3)
+				continue;
 
-				foreach (var c3 in input)
-				{
-					if (c2.SequenceEqual(c3))
-						continue;
+			var same = c1.Split("-").Intersect(c2.Split("-")).Single();
 
-					var list = c1.Concat(c2).Concat(c3).Distinct().ToArray();
+			var missing = string.Join("-", tuple.Except([same]).Order());
 
-					if (list.Count() == 3)
-						cirles.Add(string.Join("-", list.Order()));
-				}
-			}
+			if (input.Contains(missing))
+				cirles.Add(string.Join("-", tuple));
 		}
 
 		var result1 = cirles.Count(circle => circle.Split("-").Any(c => c.StartsWith("t")));
