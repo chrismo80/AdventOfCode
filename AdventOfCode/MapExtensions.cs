@@ -39,14 +39,14 @@ public static class MapExtensions
 		if (pos.Y < height - 1) yield return pos with { Y = pos.Y + 1 };
 	}
 
-	public static IEnumerable<(int, int)> Bfs(this Func<(int, int), IEnumerable<(int, int)>> walkableNeighbors,
-		(int, int) start, (int, int) end)
+	public static IEnumerable<T> Bfs<T>(this Func<T, IEnumerable<T>> walkableNeighbors, T start, T end)
+		where T : notnull
 	{
-		var visited = new Dictionary<(int, int), (int, int)>();
-		var active = new Queue<(int, int)>([start]);
+		var visited = new Dictionary<T, T>();
+		var active = new Queue<T>([start]);
 
 		while (active.TryDequeue(out var current) && !current.Equals(end))
-			foreach (var neighbor in walkableNeighbors(current).Where(neighbor => !visited.ContainsKey(neighbor)))
+			foreach (var neighbor in walkableNeighbors(current).Where(n => !visited.ContainsKey(n)))
 			{
 				visited[neighbor] = current;
 				active.Enqueue(neighbor);
@@ -55,8 +55,8 @@ public static class MapExtensions
 		return visited.Path(end, start).Reverse();
 	}
 
-	private static IEnumerable<(int, int)> Path(this Dictionary<(int, int), (int, int)> visited,
-		(int, int) end, (int, int) start)
+	private static IEnumerable<T> Path<T>(this Dictionary<T, T> visited, T end, T start)
+		where T : notnull
 	{
 		if (!visited.TryGetValue(end, out var pos))
 			yield break;
