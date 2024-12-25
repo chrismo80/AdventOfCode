@@ -5,13 +5,18 @@ public static class MapExtensions
 	public static char[][] ToMap(this string input) =>
 		input.Lines().Select(row => row.ToArray()).ToArray();
 
-	public static void Print(this char[][] map)
+	public static void Print(this char[][] map, List<(int, int)> path = null)
 	{
 		var s = new System.Text.StringBuilder();
 
-		foreach (var row in map)
+		for (var y = 0; y < map.Length; y++)
 		{
-			s.Append(row);
+			for (var x = 0; x < map[0].Length; x++)
+				if (path is not null && path.Contains((x, y)))
+					s.Append('O');
+				else
+					s.Append(map[y][x]);
+
 			s.AppendLine();
 		}
 
@@ -59,12 +64,12 @@ public static class MapExtensions
 		if (!previous.TryGetValue(end, out var pos))
 			yield break;
 
+		yield return end;
+
 		while (!pos.Equals(start))
 		{
 			yield return pos;
 			pos = previous[pos];
 		}
-
-		yield return pos;
 	}
 }
