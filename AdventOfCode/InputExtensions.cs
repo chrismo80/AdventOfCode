@@ -50,4 +50,8 @@ public static class InputExtensions
 
 	public static IEnumerable<T> ConvertTo<T>(this IEnumerable<string> items) =>
 		items.Select(item => (T)Convert.ChangeType(item, typeof(T)));
+
+	public static IEnumerable<string> Transpose(this IEnumerable<string> lines) =>
+		Enumerable.Range(0, lines.First().Length)
+			.Select(i => new string(lines.Select(line => line[i]).ToArray()));
 }
