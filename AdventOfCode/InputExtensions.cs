@@ -2,22 +2,22 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode;
 
+public static class File
+{
+	public static string Name(int year, int day, string file) =>
+		$"../../../AdventOfCode/{year}/{day:00}/{file}.txt";
+}
+
 public static class Input
 {
 	public static string Load(int year, int day, string file = "Input") =>
-		File.ReadAllText(FileName(year, day, file));
-
-	private static string FileName(int year, int day, string file) =>
-		$"../../../AdventOfCode/{year}/{day:00}/{file}.txt";
+		System.IO.File.ReadAllText(File.Name(year, day, file));
 }
 
 public static class Output
 {
-	public static void Save(int year, int day, string text, string file = "Output") =>
-		File.WriteAllText(FileName(year, day, file), text);
-
-	private static string FileName(int year, int day, string file) =>
-		$"../../../AdventOfCode/{year}/{day:00}/{file}.txt";
+	public static void Save(int year, int day, string content, string file = "Output") =>
+		System.IO.File.WriteAllText(File.Name(year, day, file), content);
 }
 
 public static class InputExtensions
