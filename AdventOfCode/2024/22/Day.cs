@@ -27,11 +27,11 @@ public static class Day22
 
 		foreach (var prices in priceLists)
 		{
-			var hash = new HashSet<string>();
+			var hash = new HashSet<string>(prices.Length);
 
 			for (var i = 5; i < prices.Length; i++)
 			{
-				var sequence = string.Join(",", prices[(i - 4)..i].Zip(prices[(i - 5)..(i - 1)], (x, y) => x - y));
+				var sequence = string.Join(',', prices[(i - 4)..i].Zip(prices[(i - 5)..(i - 1)], (x, y) => x - y));
 
 				if (hash.Add(sequence))
 					dict[sequence] = dict.GetValueOrDefault(sequence) + prices[i - 1];
