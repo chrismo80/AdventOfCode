@@ -1,6 +1,4 @@
 using AdventOfCode;
-using Castle.DynamicProxy;
-using Extensions;
 
 namespace AdventOfCode2024;
 
