@@ -25,15 +25,15 @@ public static class Day19
 		if (remaining.Length == 0)
 			return 1;
 
-		// if already calculated, just return number of ways for pattern
+		// if already calculated, just return number of ways for remaining pattern
 		if (_cache.TryGetValue(remaining, out var count))
 			return count;
 
-		// not yet calculated, do so and store number of ways in cache
-		_cache[remaining] =
-			towels.Where(remaining.StartsWith).Sum(towel => remaining[towel.Length..].CountWays(towels));
+		// remaining pattern not yet calculated, do so and store number of ways for pattern in cache
+		_cache[remaining] = towels.Where(remaining.StartsWith)
+			.Sum(towel => remaining[towel.Length..].CountWays(towels));
 
-		// then return value from cache
+		// then return calculated value
 		return _cache[remaining];
 	}
 }
