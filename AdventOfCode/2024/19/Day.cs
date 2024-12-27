@@ -29,6 +29,7 @@ public static class Day19
 
 		// if already calculated, just return number of ways for remaining pattern from cache
 		// if not yet calculated, do so and store number of ways for pattern in cache
+		// is done by removing found towel from beginning of pattern string and call same function for remaining string
 		return _cache.GetOrAdd(remaining, (_) =>
 			towels.Where(remaining.StartsWith).Sum(towel => remaining[towel.Length..].CountWays(towels)));
 	}
