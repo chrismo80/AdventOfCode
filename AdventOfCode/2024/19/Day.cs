@@ -27,11 +27,11 @@ public static class Day19
 		if (pattern.Length == 0)
 			return 1;
 
-		// check if already collected for this key, if so return value
+		// check if already collected for this pattern, if so return value
 		if (_cache.TryGetValue(pattern, out var count))
 			return count;
 
-		// collect for this key by removing found towels from beginning of pattern and call again for remaining pattern
+		// collect for pattern by removing found towels from beginning of pattern and call again for remaining patterns
 		_cache[pattern] = towels.Where(pattern.StartsWith).Sum(towel => pattern[towel.Length..].CountWays(towels));
 
 		return _cache[pattern];
