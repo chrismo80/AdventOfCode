@@ -21,16 +21,19 @@ public static class Day19
 	private static System.Collections.Concurrent.ConcurrentDictionary<string, long> _cache = new();
 
 	// recursion
-	private static long CountWays(this string remaining, string[] towels)
+	private static long CountWays(this string pattern, string[] towels)
 	{
-		// remaining is empty, so design fully doable, add one more way
-		if (remaining.Length == 0)
+		// design completely replaced by towels, return one way
+		if (pattern.Length == 0)
 			return 1;
 
-		// if already calculated, just return number of ways for remaining pattern from cache
-		// if not yet calculated, do so and store number of ways for pattern in cache
-		// is done by removing found towel from beginning of pattern string and call same function for remaining string
-		return _cache.GetOrAdd(remaining, (_) =>
-			towels.Where(remaining.StartsWith).Sum(towel => remaining[towel.Length..].CountWays(towels)));
+		// check if already collected for this key, if so return value
+		if (_cache.TryGetValue(pattern, out var count))
+			return count;
+
+		// collect for this key by removing found towels from beginning of pattern and call again for remaining pattern
+		_cache[pattern] = towels.Where(pattern.StartsWith).Sum(towel => pattern[towel.Length..].CountWays(towels));
+
+		return _cache[pattern];
 	}
 }
