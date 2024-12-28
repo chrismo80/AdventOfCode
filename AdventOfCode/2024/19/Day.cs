@@ -23,12 +23,12 @@ public static class Day19
 	// recursion
 	private static long CountWays(this string pattern, string[] towels)
 	{
-		// design completely replaced by towels, return one way
+		// design completely replaced by towels, return one new found new way
 		if (pattern.Length == 0)
 			return 1;
 
-		// calculate for pattern by removing found towels from beginning of pattern and call again for rest
-		if (!_cache.ContainsKey(pattern))
+		// check if ways for pattern already calculated
+		if (!_cache.ContainsKey(pattern)) // remove found towels from beginning of pattern and call again for rest
 			_cache[pattern] = towels.Where(pattern.StartsWith).Sum(towel => pattern[towel.Length..].CountWays(towels));
 
 		return _cache[pattern];
