@@ -11,24 +11,59 @@ public static class Day24
 		var initialValues = input.First().ToNestedArray<string>("\n", ": ")
 			.ToDictionary(kvp => kvp[0], kvp => int.Parse(kvp[1]));
 
-		var connections = input.Last().ToNestedArray<string>("\n", " ");
+		var initialWires = input.Last().ToNestedArray<string>("\n", " ");
 
 		var expected = initialValues.Value('x') + initialValues.Value('y');
 
-		var result1 = initialValues.Calculate(connections).Value('z');
-		var result2 = expected;
+		var result1 = initialValues.Calculate(initialWires).Value('z');
+		var result2 = 0; //initialValues.FindSwaps(initialWires, expected); // too expensive
 
 		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
 	}
 
-	private static Dictionary<string, int> Calculate(this Dictionary<string, int> initialValues, string[][] connections)
+	private static (int, int, int, int) FindSwaps(this Dictionary<string, int> initialValues,
+		string[][] wires, long expected)
+	{
+		var count = wires.Length;
+
+		for (var a = 0; a < count; a++)
+		for (var b = 1; b < count; b++)
+		for (var c = 2; c < count; c++)
+		for (var d = 3; d < count; d++)
+			if (initialValues.Calculate(wires.Copy().Swap(a, b).Swap(c, d)).Value('z') == expected)
+				return (a, b, c, d);
+
+		return default;
+	}
+
+	private static string[][] Copy(this string[][] array) =>
+		array.Select(items => items.ToArray()).ToArray();
+
+	private static string[][] Swap(this string[][] wires, int from, int to)
+	{
+		var first = wires[from].SkipLast(1).Append(wires[to].Last()).ToArray();
+		var second = wires[to].SkipLast(1).Append(wires[from].Last()).ToArray();
+
+		wires[from] = first;
+		wires[to] = second;
+
+		return wires;
+	}
+
+	private static Dictionary<string, int> Calculate(this Dictionary<string, int> initialValues, string[][] wires)
 	{
 		var dict = initialValues.ToDictionary(entry => entry.Key, entry => entry.Value);
 
-		while (connections.Any(c => !dict.ContainsKey(c.Last())))
-			foreach (var connection in connections.Where(c =>
-						!dict.ContainsKey(c.Last()) && dict.ContainsKey(c[0]) && dict.ContainsKey(c[2])))
-				dict[connection.Last()] = Connect(dict[connection[0]], connection[1], dict[connection[2]]);
+		var count = 0;
+
+		while (wires.Any(w => !dict.ContainsKey(w.Last())) && dict.Count > count)
+		{
+			count = dict.Count;
+
+			foreach (var wire in wires.Where(w =>
+						!dict.ContainsKey(w.Last()) && dict.ContainsKey(w[0]) && dict.ContainsKey(w[2])))
+				dict[wire.Last()] = Connect(dict[wire[0]], wire[1], dict[wire[2]]);
+		}
 
 		return dict;
 	}
