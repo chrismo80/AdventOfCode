@@ -13,7 +13,7 @@ public static class Day23
 			.Order()
 			.ToArray();
 
-		var cirles = new HashSet<string>();
+		var circles = new HashSet<string>();
 
 		foreach (var c1 in input)
 		foreach (var c2 in input)
@@ -28,10 +28,10 @@ public static class Day23
 			var missing = string.Join("-", tuple.Except([same]).Order());
 
 			if (input.Contains(missing))
-				cirles.Add(string.Join("-", tuple));
+				circles.Add(string.Join("-", tuple));
 		}
 
-		var result1 = cirles.Count(circle => circle.Split("-").Any(c => c.StartsWith("t")));
+		var result1 = circles.Count(circle => circle.Split("-").Any(c => c.StartsWith("t")));
 		var result2 = 0;
 
 		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
