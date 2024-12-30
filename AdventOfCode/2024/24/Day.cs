@@ -1,5 +1,4 @@
 using AdventOfCode;
-using NSubstitute.ReturnsExtensions;
 
 namespace AdventOfCode2024;
 
