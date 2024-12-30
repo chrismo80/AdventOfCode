@@ -1,4 +1,5 @@
 using AdventOfCode;
+using NSubstitute.ReturnsExtensions;
 
 namespace AdventOfCode2024;
 
@@ -13,27 +14,49 @@ public static class Day24
 
 		var initialWires = input.Last().ToNestedArray<string>("\n", " ");
 
+		var dict = initialValues.Calculate(initialWires);
+
+		for (var i = 0; i < 45; i++)
+			Console.WriteLine($"{i:00}: " + dict[$"x{i:00}"] + " + " + dict[$"y{i:00}"] + " = " + dict[$"z{i:00}"]);
+
 		var expected = initialValues.Value('x') + initialValues.Value('y');
 
 		var result1 = initialValues.Calculate(initialWires).Value('z');
-		var result2 = 0; //initialValues.FindSwaps(initialWires, expected); // too expensive
+		var result2 = 0;
 
 		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
 	}
 
-	private static (int, int, int, int) FindSwaps(this Dictionary<string, int> initialValues,
-		string[][] wires, long expected)
+	private static bool Check(this IEnumerable<string> inputs, string output)
 	{
-		var count = wires.Length;
+		var bit = int.Parse(output[1..]);
 
-		for (var a = 0; a < count; a++)
-		for (var b = 1; b < count; b++)
-		for (var c = 2; c < count; c++)
-		for (var d = 3; d < count; d++)
-			if (initialValues.Calculate(wires.Copy().Swap(a, b).Swap(c, d)).Value('z') == expected)
-				return (a, b, c, d);
+		if (inputs.Contains($"x{bit:00}") && inputs.Contains($"y{bit:00}"))
+			return true;
 
-		return default;
+		var distinct = inputs.Distinct().Order().ToArray();
+
+		return false;
+	}
+
+	private static IEnumerable<string> FindInputs(this string[][] wires, string output)
+	{
+		var connection = wires.FirstOrDefault(wire => wire.Last() == output);
+
+		if (connection == null)
+			yield break;
+
+		if (connection[0][0] == 'x' || connection[0][0] == 'y')
+			yield return connection[0];
+
+		foreach (var input in wires.FindInputs(connection[0]))
+			yield return input;
+
+		if (connection[2][0] == 'x' || connection[2][0] == 'y')
+			yield return connection[2];
+
+		foreach (var input in wires.FindInputs(connection[2]))
+			yield return input;
 	}
 
 	private static string[][] Copy(this string[][] array) =>
