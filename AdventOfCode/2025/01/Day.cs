@@ -11,3 +11,14 @@ public static class Day1
 		yield return data.Sum();
 	}
 }
+
+public static class EnumerableExtensions
+{
+	extension<T>(IEnumerable<T> target)
+	{
+		public bool IsEmpty()
+		{
+			return !target.Any();
+		}
+	}
+}
