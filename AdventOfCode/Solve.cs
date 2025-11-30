@@ -6,20 +6,24 @@ using System.Diagnostics;
 
 public static class Problem
 {
-	public static void Solve(int year = 2025, int day = 1)
+	public static void Solve(int year, int day)
 	{
+		var input = Input.Load(year, day);
+
 		var method = Assembly.GetExecutingAssembly()
 			.GetType($"AdventOfCode{year}.Day{day}")
 			.GetMethod("Solve");
 
 		long start = Stopwatch.GetTimestamp(), i = 1;
 
-		if (method.Invoke(null, [Input.Load(year, day)]) is not IEnumerable<object> results)
+		if (method.Invoke(null, [input]) is not IEnumerable<object> results)
 			return;
 
-		foreach (var result in results)
-			Console.Write($"Result {i++}: {result}\t\t\t");
+		Console.Write($"Year {year} Day {day:00}: {Stopwatch.GetElapsedTime(start).TotalMilliseconds:F1} ms".PadRight(40));
 
-		Console.WriteLine($"Duration: {Stopwatch.GetElapsedTime(start).TotalMilliseconds:F1} ms");
+		foreach (var result in results)
+			Console.Write($"Result {i++}: {result}".PadRight(30));
+
+		Console.WriteLine();
 	}
 }

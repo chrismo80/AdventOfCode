@@ -4,16 +4,17 @@ namespace AdventOfCode2024;
 
 public static class Day2
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var reports = Input.Load(2024, 2).ToNestedArray<int>("\n", " ");
+		var reports = input.ToNestedArray<int>("\n", " ");
 
 		var safeReports = reports.Where(l => IsSafe(Diffs(l)));
 
 		var nearlySafeReports = reports.Except(safeReports)
 			.Where(l => SubLevels(l).Select(Diffs).Any(IsSafe));
 
-		Console.WriteLine($"Part 1: {safeReports.Count()}, Part 2: {safeReports.Count() + nearlySafeReports.Count()}");
+		yield return safeReports.Count();
+		yield return safeReports.Count() + nearlySafeReports.Count();
 	}
 
 	private static IEnumerable<int> Diffs(IEnumerable<int> levels) =>

@@ -1,1 +1,1 @@
-﻿AdventOfCode.Problem.Solve();
+﻿AdventOfCode.Problem.Solve(2025, 1);
