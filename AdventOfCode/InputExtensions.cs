@@ -12,6 +12,9 @@ public static class Input
 {
 	public static string Load(int year, int day, string file = "Input") =>
 		System.IO.File.ReadAllText(File.Name(year, day, file));
+
+	public static bool Exists(int year, int day, string file = "Input") =>
+		System.IO.File.Exists(File.Name(year, day, file));
 }
 
 public static class Output

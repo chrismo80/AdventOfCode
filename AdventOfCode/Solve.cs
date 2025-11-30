@@ -8,6 +8,9 @@ public static class Problem
 {
 	public static void Solve(int year, int day)
 	{
+		if (!Input.Exists(year, day))
+			return;
+
 		var input = Input.Load(year, day);
 
 		var method = Assembly.GetExecutingAssembly()
