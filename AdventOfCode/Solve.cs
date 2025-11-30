@@ -1,16 +1,25 @@
-﻿namespace AdventOfCode;
+﻿using System.Reflection;
+
+namespace AdventOfCode;
 
 using System.Diagnostics;
 
 public static class Problem
 {
-	public static void Solve()
+	public static void Solve(int year = 2025, int day = 1)
 	{
-		long start = Stopwatch.GetTimestamp(), c = 0, runs = 1;
+		var method = Assembly.GetExecutingAssembly()
+			.GetType($"AdventOfCode{year}.Day{day}")
+			.GetMethod("Solve");
 
-		while (c++ < runs)
-			AdventOfCode2025.Day1.Solve();
+		long start = Stopwatch.GetTimestamp(), i = 1;
 
-		Console.WriteLine($"Duration: {Stopwatch.GetElapsedTime(start).Divide(runs).TotalMilliseconds:F1} ms");
+		if (method.Invoke(null, [Input.Load(year, day)]) is not IEnumerable<object> results)
+			return;
+
+		foreach (var result in results)
+			Console.Write($"Result {i++}: {result}\t\t\t");
+
+		Console.WriteLine($"Duration: {Stopwatch.GetElapsedTime(start).TotalMilliseconds:F1} ms");
 	}
 }
