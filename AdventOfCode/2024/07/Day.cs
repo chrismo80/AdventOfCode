@@ -5,9 +5,9 @@ namespace AdventOfCode2024;
 
 public static class Day7
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 7).Lines()
+		var data = input.Lines()
 			.Select(row =>
 				(
 					Test: long.Parse(row.Split(": ").First()),
@@ -15,10 +15,8 @@ public static class Day7
 				)
 			).ToArray();
 
-		var result1 = input.FindCalibrationResult('+', '*');
-		var result2 = input.FindCalibrationResult('+', '*', '|');
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return data.FindCalibrationResult('+', '*');
+		yield return data.FindCalibrationResult('+', '*', '|');
 	}
 
 	private static long FindCalibrationResult(this IEnumerable<(long Test, long[] Values)> equations,

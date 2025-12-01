@@ -4,14 +4,12 @@ namespace AdventOfCode2024;
 
 public static class Day9
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var diskmap = Input.Load(2024, 9).GetDiskMap();
+		var diskmap = input.GetDiskMap();
 
-		var result1 = diskmap.ToArray().MoveSingle().GetCheckSum();
-		var result2 = diskmap.ToArray().MoveBlocks().GetCheckSum();
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return diskmap.ToArray().MoveSingle().GetCheckSum();
+		yield return diskmap.ToArray().MoveBlocks().GetCheckSum();
 	}
 
 	private static long GetCheckSum(this char[] diskmap) =>

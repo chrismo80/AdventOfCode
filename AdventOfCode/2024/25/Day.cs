@@ -4,16 +4,14 @@ namespace AdventOfCode2024;
 
 public static class Day25
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 25).ToArray<string>("\n\n");
+		var data = Input.Load(2024, 25).ToArray<string>("\n\n");
 
-		var locks = input.Where(item => item[0] == '#').Select(GetHeights).ToArray();
-		var keys = input.Where(item => item[0] == '.').Select(GetHeights).ToArray();
+		var locks = data.Where(item => item[0] == '#').Select(GetHeights).ToArray();
+		var keys = data.Where(item => item[0] == '.').Select(GetHeights).ToArray();
 
-		var fits = keys.Sum(k => locks.Count(l => k.Fit(l)));
-
-		Console.WriteLine($"Result: {fits}");
+		yield return keys.Sum(k => locks.Count(l => k.Fit(l)));
 	}
 
 	private static int[] GetHeights(this string input) => input.Lines().Skip(1).SkipLast(1)

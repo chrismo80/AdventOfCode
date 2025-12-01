@@ -1,22 +1,23 @@
-namespace AdventOfCode2016
+using AdventOfCode;
+
+namespace AdventOfCode2016;
+
+public static class Day6
 {
-    public static class Day6
-    {
-        public static void Solve()
-        {
-            var input = File.ReadAllLines("AdventOfCode/2016/06/Test.txt");
+	public static IEnumerable<object> Solve(string input)
+	{
+		var lines = input.Lines();
 
-            var transposed = Enumerable.Range(0, input[0].Length)
-                .Select(i => input.Select(word => word[i]));
+		var transposed = Enumerable.Range(0, lines[0].Length)
+			.Select(i => lines.Select(word => word[i]));
 
-            var mostCommon = transposed
-                .Select(word => word.GroupBy(c => c).OrderBy(g => g.Count()).Select(g => g.Key).Last());
+		var mostCommon = transposed
+			.Select(word => word.GroupBy(c => c).OrderBy(g => g.Count()).Select(g => g.Key).Last());
 
-            var leastCommon = transposed
-                .Select(word => word.GroupBy(c => c).OrderBy(g => g.Count()).Select(g => g.Key).First());
+		var leastCommon = transposed
+			.Select(word => word.GroupBy(c => c).OrderBy(g => g.Count()).Select(g => g.Key).First());
 
-            Console.WriteLine($"Part 1: {new string(mostCommon.ToArray())}");
-            Console.WriteLine($"Part 2: {new string(leastCommon.ToArray())}");
-        }
-    }
+		yield return new string(mostCommon.ToArray());
+		yield return new string(leastCommon.ToArray());
+	}
 }

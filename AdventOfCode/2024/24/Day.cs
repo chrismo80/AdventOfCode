@@ -4,14 +4,14 @@ namespace AdventOfCode2024;
 
 public static class Day24
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 24).ToArray<string>("\n\n");
+		var data = Input.Load(2024, 24).ToArray<string>("\n\n");
 
-		var initialValues = input.First().ToNestedArray<string>("\n", ": ")
+		var initialValues = data.First().ToNestedArray<string>("\n", ": ")
 			.ToDictionary(kvp => kvp[0], kvp => int.Parse(kvp[1]));
 
-		var initialWires = input.Last().ToNestedArray<string>("\n", " ");
+		var initialWires = data.Last().ToNestedArray<string>("\n", " ");
 
 		var dict = initialValues.Calculate(initialWires);
 
@@ -20,10 +20,7 @@ public static class Day24
 
 		var expected = initialValues.Value('x') + initialValues.Value('y');
 
-		var result1 = initialValues.Calculate(initialWires).Value('z');
-		var result2 = 0;
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return initialValues.Calculate(initialWires).Value('z');
 	}
 
 	private static bool Check(this IEnumerable<string> inputs, string output)

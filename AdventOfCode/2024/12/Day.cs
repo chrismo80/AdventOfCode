@@ -4,9 +4,9 @@ namespace AdventOfCode2024;
 
 public static class Day12
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var map = Input.Load(2024, 12).ToMap();
+		var map = input.ToMap();
 
 		var regions = new HashSet<(int, int)[]>();
 
@@ -18,10 +18,7 @@ public static class Day12
 			if (regions.All(r => !r.Contains((x, y))))
 				regions.Add(walkable.FindRegion((x, y)));
 
-		var result1 = regions.Sum(r => r.Count() * r.Perimeter());
-		var result2 = 0;
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return regions.Sum(r => r.Count() * r.Perimeter());
 	}
 
 	private static int Perimeter(this IEnumerable<(int X, int Y)> region) =>

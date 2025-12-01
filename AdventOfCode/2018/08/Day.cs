@@ -1,41 +1,44 @@
+using AdventOfCode;
+
 namespace AdventOfCode2018;
+
 public static class Day8
 {
-    public static void Solve()
-    {
-        var input = File.ReadAllLines("AdventOfCode/2018/08/Input.txt")[0]
-            .Split(' ').Select(int.Parse).ToArray();
+	public static IEnumerable<object> Solve(string input)
+	{
+		var pointer = 0;
+		var root = new Node(input.ToArray<int>(" "), ref pointer);
 
-        int pointer = 0;
-        var root = new Node(input, ref pointer);
+		yield return root.MetadataSum;
+		yield return root.Value;
+		yield return root.Count;
+	}
 
-        Console.WriteLine($"Part 1: {root.MetadataSum}, Part 2: {root.Value}, Part 3: {root.Count}");
-    }
+	public class Node
+	{
+		public List<int> Metadata = new();
+		public List<Node> Children = new();
+		public int Count => Children.Count + Children.Sum(c => c.Count);
+		public int MetadataSum => Metadata.Sum() + Children.Sum(c => c.MetadataSum);
 
-    public class Node
-    {
-        public List<int> Metadata = new();
-        public List<Node> Children = new();
-        public int Count => Children.Count + Children.Sum(c => c.Count);
-        public int MetadataSum => Metadata.Sum() + Children.Sum(c => c.MetadataSum);
-        public int Value => !Children.Any() ? Metadata.Sum() :
-            Metadata.Where(m => m - 1 < Children.Count).Sum(m => Children[m - 1].Value);
+		public int Value => !Children.Any() ? Metadata.Sum() :
+			Metadata.Where(m => m - 1 < Children.Count).Sum(m => Children[m - 1].Value);
 
-        public Node(int[] data, ref int i)
-        {
-            // read first 2 numbers for children count and meta data count
-            int c = data[i++];
-            int m = data[i++];
+		public Node(int[] data, ref int i)
+		{
+			// read first 2 numbers for children count and meta data count
+			var c = data[i++];
+			var m = data[i++];
 
-            // create as many children as in c detected
-            while (c-- > 0)
-                Children.Add(new Node(data, ref i));
+			// create as many children as in c detected
+			while (c-- > 0)
+				Children.Add(new Node(data, ref i));
 
-            // add meta data
-            Metadata = data.Skip(i).Take(m).ToList();
+			// add meta data
+			Metadata = data.Skip(i).Take(m).ToList();
 
-            // move pointer manually
-            i += m;
-        }
-    }
+			// move pointer manually
+			i += m;
+		}
+	}
 }

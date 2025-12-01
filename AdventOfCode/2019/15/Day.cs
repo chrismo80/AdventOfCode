@@ -4,9 +4,9 @@ using System.Collections.Concurrent;
 
 public static class Day15
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var program = File.ReadAllLines("AdventOfCode/2019/15/Input.txt")[0]
+		var program = input
 			.Split(',').Select(int.Parse).ToArray();
 
 		var walls = new HashSet<(int X, int Y)>();
@@ -53,7 +53,7 @@ public static class Day15
 		var start = (0 - walls.Min(w => w.X), 0 - walls.Min(w => w.Y));
 		oxygen = (oxygen.X - walls.Min(w => w.X), oxygen.Y - walls.Min(w => w.Y));
 
-		var search = new PathFinding.Grid<char>()
+		var search = new PathFinding.Grid<char>
 		{
 			Map = PrintMap(walls, free, pos).Select(row => row.ToArray()).ToArray(),
 			Walkable = (_, _, next, _, _, _, _, _, _) => next != '#'
@@ -65,7 +65,8 @@ public static class Day15
 		var result2 = search.BreadthFirstSearch(oxygen, (0, 0)).ToList();
 		Console.WriteLine(search.Print('⭕', '⚪'));
 
-		Console.WriteLine($"Part 1: {result1.Count}, Part 2: {result2.Count}");
+		yield return result1.Count;
+		yield return result2.Count;
 	}
 
 	private static IEnumerable<string> PrintMap(

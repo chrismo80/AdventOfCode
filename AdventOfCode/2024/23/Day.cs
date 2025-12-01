@@ -4,9 +4,9 @@ namespace AdventOfCode2024;
 
 public static class Day23
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 23)
+		var data = input
 			.ToNestedArray<string>("\n", "-")
 			.Select(c => string.Join("-", c.Order()))
 			.Distinct()
@@ -15,8 +15,8 @@ public static class Day23
 
 		var circles = new HashSet<string>();
 
-		foreach (var c1 in input)
-		foreach (var c2 in input)
+		foreach (var c1 in data)
+		foreach (var c2 in data)
 		{
 			var tuple = c1.Split("-").Concat(c2.Split("-")).Distinct().Order();
 
@@ -27,13 +27,10 @@ public static class Day23
 
 			var missing = string.Join("-", tuple.Except([same]).Order());
 
-			if (input.Contains(missing))
+			if (data.Contains(missing))
 				circles.Add(string.Join("-", tuple));
 		}
 
-		var result1 = circles.Count(circle => circle.Split("-").Any(c => c.StartsWith("t")));
-		var result2 = 0;
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return circles.Count(circle => circle.Split("-").Any(c => c.StartsWith("t")));
 	}
 }

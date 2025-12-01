@@ -4,15 +4,12 @@ namespace AdventOfCode2024;
 
 public static class Day11
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var stones = Input.Load(2024, 11).ToArray<long>(" ")
-			.ToDictionary(x => x, x => 1L);
+		var stones = input.ToArray<long>(" ").ToDictionary(x => x, x => 1L);
 
-		var result1 = stones.Blink(25).Values.Sum();
-		var result2 = stones.Blink(75).Values.Sum();
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return stones.Blink(25).Values.Sum();
+		yield return stones.Blink(75).Values.Sum();
 	}
 
 	private static Dictionary<long, long> Blink(this Dictionary<long, long> stones, int count)

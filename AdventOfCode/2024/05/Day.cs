@@ -4,22 +4,23 @@ namespace AdventOfCode2024;
 
 public static class Day5
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 5).ToArray<string>("\n\n");
+		var data = input.ToArray<string>("\n\n");
 
-		var rules = input.First().Split('\n')
+		var rules = data.First().Split('\n')
 			.Select(x => x.Split('|').Select(int.Parse).ToArray())
 			.ToArray();
 
-		var updates = input.Last().Split('\n')
+		var updates = data.Last().Split('\n')
 			.Select(row => row.Split(',').Select(int.Parse).ToArray())
 			.ToArray();
 
 		var correct = updates.Where(update => rules.All(update.Follows));
 		var corrected = updates.Except(correct).Select(u => u.Correct(rules));
 
-		Console.WriteLine($"Part 1: {correct.GetResult()}, Part 2: {corrected.GetResult()}");
+		yield return correct.GetResult();
+		yield return corrected.GetResult();
 	}
 
 	private static int GetResult(this IEnumerable<int[]> updates) =>

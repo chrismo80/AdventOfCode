@@ -4,19 +4,17 @@ namespace AdventOfCode2024;
 
 public static class Day22
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var secretNumbers = Input.Load(2024, 22).ToArray<long>("\n")
+		var secretNumbers = input.ToArray<long>("\n")
 			.Select(n => new List<long>([n])).ToArray();
 
 		for (var c = 0; c < 2000; c++)
 		for (var i = 0; i < secretNumbers.Length; i++)
 			secretNumbers[i].Add(secretNumbers[i].Last().Next());
 
-		var result1 = secretNumbers.Select(n => n.Last()).Sum();
-		var result2 = secretNumbers.BestPrice();
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return secretNumbers.Select(n => n.Last()).Sum();
+		yield return secretNumbers.BestPrice();
 	}
 
 	private static long BestPrice(this List<long>[] secretNumbers)

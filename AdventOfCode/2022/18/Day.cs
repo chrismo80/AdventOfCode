@@ -4,16 +4,17 @@ namespace AdventOfCode2022;
 
 public static class Day18
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2022, 18, "Test").Lines()
+		var lines = input.Lines()
 			.Select(l => l.Split(',').Select(int.Parse).ToArray())
 			.Select(c => (X: c[0], Y: c[1], Z: c[2])).ToArray();
 
-		var result1 = input.Sum(c => 6 - BlockedSides(c, input));
+		var result1 = lines.Sum(c => 6 - BlockedSides(c, lines));
 		var result2 = result1 - 0;
 
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return result1;
+		yield return result2;
 
 		static int BlockedSides((int X, int Y, int Z) c, (int, int, int)[] all)
 		{

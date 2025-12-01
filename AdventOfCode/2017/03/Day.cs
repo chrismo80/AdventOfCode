@@ -1,76 +1,80 @@
-namespace AdventOfCode2017
+namespace AdventOfCode2017;
+
+public static class Day3
 {
-    public static class Day3
-    {
-        public static void Solve()
-        {
-            var input = int.Parse(File.ReadAllText("AdventOfCode/2017/03/Input.txt"));
+	public static IEnumerable<object> Solve(string input)
+	{
+		var number = int.Parse(input);
 
-            int result1 = 0, value1 = 1, x = 0, y = 0, corner = 1;
-            long result2 = 0, value2 = 1;
+		int result1 = 0, value1 = 1, x = 0, y = 0, corner = 1;
+		long result2 = 0, value2 = 1;
 
-            var grid = new Dictionary<(int X, int Y), long>();
+		var grid = new Dictionary<(int X, int Y), long>();
 
-            while (result1 == 0)
-            {
-                for (int i = 0; i < corner; i++)
-                {
-                    if (value1 == input)
-                        result1 = Math.Abs(x) + Math.Abs(y);
+		while (result1 == 0)
+		{
+			for (var i = 0; i < corner; i++)
+			{
+				if (value1 == number)
+					result1 = Math.Abs(x) + Math.Abs(y);
 
-                    x += corner % 2 == 0 ? -1 : 1;
-                    value1++;
-                }
+				x += corner % 2 == 0 ? -1 : 1;
+				value1++;
+			}
 
-                for (int i = 0; i < corner; i++)
-                {
-                    if (value1 == input)
-                        result1 = Math.Abs(x) + Math.Abs(y);
+			for (var i = 0; i < corner; i++)
+			{
+				if (value1 == number)
+					result1 = Math.Abs(x) + Math.Abs(y);
 
-                    y += corner % 2 == 0 ? 1 : -1;
-                    value1++;
-                }
-                corner++;
-            }
+				y += corner % 2 == 0 ? 1 : -1;
+				value1++;
+			}
 
-            x = 0; y = 0; corner = 1;
+			corner++;
+		}
 
-            while (result2 == 0)
-            {
-                for (int i = 0; i < corner; i++)
-                {
-                    grid[(x, y)] = value2;
+		x = 0;
+		y = 0;
+		corner = 1;
 
-                    if (value2 > input)
-                    {
-                        result2 = value2;
-                        break;
-                    }
+		while (result2 == 0)
+		{
+			for (var i = 0; i < corner; i++)
+			{
+				grid[(x, y)] = value2;
 
-                    x += corner % 2 == 0 ? -1 : 1;
+				if (value2 > number)
+				{
+					result2 = value2;
+					break;
+				}
 
-                    value2 = grid.Where(kvp => Math.Abs(kvp.Key.X - x) <= 1 && Math.Abs(kvp.Key.Y - y) <= 1)
-                        .Sum(kvp => kvp.Value);
-                }
+				x += corner % 2 == 0 ? -1 : 1;
 
-                for (int i = 0; i < corner; i++)
-                {
-                    grid[(x, y)] = value2;
+				value2 = grid.Where(kvp => Math.Abs(kvp.Key.X - x) <= 1 && Math.Abs(kvp.Key.Y - y) <= 1)
+					.Sum(kvp => kvp.Value);
+			}
 
-                    if (value2 > input)
-                    {
-                        result2 = value2;
-                        break;
-                    }
+			for (var i = 0; i < corner; i++)
+			{
+				grid[(x, y)] = value2;
 
-                    y += corner % 2 == 0 ? 1 : -1;
-                    value2 = grid.Where(kvp => Math.Abs(kvp.Key.X - x) <= 1 && Math.Abs(kvp.Key.Y - y) <= 1)
-                        .Sum(kvp => kvp.Value);
-                }
-                corner++;
-            }
+				if (value2 > number)
+				{
+					result2 = value2;
+					break;
+				}
 
-            Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
-        }
-    }
+				y += corner % 2 == 0 ? 1 : -1;
+				value2 = grid.Where(kvp => Math.Abs(kvp.Key.X - x) <= 1 && Math.Abs(kvp.Key.Y - y) <= 1)
+					.Sum(kvp => kvp.Value);
+			}
+
+			corner++;
+		}
+
+		yield return result1;
+		yield return result2;
+	}
 }

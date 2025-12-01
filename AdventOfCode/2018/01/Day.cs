@@ -1,16 +1,21 @@
-namespace AdventOfCode2018;
+using AdventOfCode;
 using Extensions;
+
+namespace AdventOfCode2018;
+
 public static class Day1
 {
-    public static void Solve()
-    {
-        var input = File.ReadAllLines("AdventOfCode/2018/01/Input.txt").Select(int.Parse).ToArray();
+	public static IEnumerable<object> Solve(string input)
+	{
+		var data = input.ToArray<int>("\n");
 
-        int frequency = 0;
-        var history = new HashSet<int> { frequency };
+		yield return data.Sum();
 
-        var lastChange = input.RepeatForever().SkipWhile(change => history.Add(frequency += change)).First();
+		var frequency = 0;
+		var history = new HashSet<int> { frequency };
 
-        Console.WriteLine($"Part 1; {input.Sum()}, Part 2: {frequency}");
-    }
+		var lastChange = input.RepeatForever().SkipWhile(change => history.Add(frequency += change)).First();
+
+		yield return frequency;
+	}
 }

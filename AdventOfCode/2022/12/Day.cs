@@ -1,11 +1,12 @@
+using AdventOfCode;
+
 namespace AdventOfCode2022;
 
 public static class Day12
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var map = File.ReadAllLines("AdventOfCode/2022/12/Input.txt")
-			.Select(l => l.Select(c => c).ToArray()).ToArray();
+		var map = input.ToMap();
 
 		var start = (Y: 0, X: 0);
 		var end = (Y: 0, X: 0);
@@ -26,12 +27,12 @@ public static class Day12
 			}
 		}
 
-		var search = new PathFinding.Grid<char>()
+		var search = new PathFinding.Grid<char>
 			{ Map = map, Walkable = (_, _, next, _, _, current, _, _, _) => next - current <= 1 };
 		var path = search.AStar(start, end);
 		//Console.WriteLine(search.Print('⭕', '⚪'));
 
-		Console.WriteLine($"Part 1: {path.Count()}"); // 517
+		yield return path.Count();
 
 		var distances = new Dictionary<(int, int), int>();
 
@@ -42,7 +43,7 @@ public static class Day12
 
 		Parallel.ForEach(distances.Keys, start =>
 		{
-			var search = new PathFinding.Grid<char>()
+			var search = new PathFinding.Grid<char>
 			{
 				Map = map,
 				Walkable = (_, _, next, _, _, current, _, _, _) => next - current <= 1
@@ -66,6 +67,6 @@ public static class Day12
 		path = search.AStar(result2.Key, end);
 		//Console.WriteLine(search.Print('⭕', '⚪'));
 
-		Console.WriteLine($"Part 2: {result2.Value}"); // 512
+		yield return result2.Value;
 	}
 }

@@ -5,17 +5,13 @@ namespace AdventOfCode2024;
 
 public static class Day13
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var clawMachines = Input.Load(2024, 13)
-			.Split("\n\n")
+		var clawMachines = input.Split("\n\n")
 			.Select(input => new ClawMachine(input.Split('\n')))
 			.ToArray();
 
-		var result1 = clawMachines.Select(m => m.CheapestTokens()).Sum();
-		var result2 = 0;
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return clawMachines.Select(m => m.CheapestTokens()).Sum();
 	}
 
 	private class ClawMachine

@@ -4,18 +4,16 @@ namespace AdventOfCode2024;
 
 public static class Day8
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var grid = new PathFinding.Grid<char>() { Map = Input.Load(2024, 8).ToMap() };
+		var grid = new PathFinding.Grid<char> { Map = input.ToMap() };
 
 		var types = grid.GetSymbols().Except(['.']);
 
 		var antennas = types.Select(type => grid.Find((value) => value == type)).ToArray();
 
-		var result1 = antennas.Count(grid.Width, grid.Height);
-		var result2 = antennas.Count(grid.Width, grid.Height, grid.Width);
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return antennas.Count(grid.Width, grid.Height);
+		yield return antennas.Count(grid.Width, grid.Height, grid.Width);
 	}
 
 	private static int Count(this IEnumerable<(int X, int Y)>[] antennas, int width, int height, int distance = 1) =>

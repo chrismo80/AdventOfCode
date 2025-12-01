@@ -1,22 +1,23 @@
-namespace AdventOfCode2017
+using AdventOfCode;
+
+namespace AdventOfCode2017;
+
+public static class Day5
 {
-    public static class Day5
-    {
-        public static void Solve()
-        {
-            var input = File.ReadAllLines("AdventOfCode/2017/05/Input.txt").Select(int.Parse).ToArray();
+	public static IEnumerable<object> Solve(string input)
+	{
+		var numbers = input.ToArray<int>("\n");
 
-            int pointer = 0, steps = 0, change;
+		int pointer = 0, steps = 0, change;
 
-            while (pointer < input.Length)
-            {
-                change = input[pointer] >= 3 ? -1 : 1; // 1;
-                input[pointer] += change;
-                pointer += input[pointer] - change;
-                steps++;
-            }
+		while (pointer < numbers.Length)
+		{
+			change = numbers[pointer] >= 3 ? -1 : 1; // 1;
+			numbers[pointer] += change;
+			pointer += numbers[pointer] - change;
+			steps++;
+		}
 
-            Console.WriteLine(steps);
-        }
-    }
+		yield return steps;
+	}
 }

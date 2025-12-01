@@ -4,17 +4,18 @@ namespace AdventOfCode2024;
 
 public static class Day19
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 19).ToArray<string>("\n\n");
+		var data = input.ToArray<string>("\n\n");
 
-		var towels = input.First().ToArray<string>(", ");
-		var designs = input.Last().ToArray<string>("\n");
+		var towels = data.First().ToArray<string>(", ");
+		var designs = data.Last().ToArray<string>("\n");
 
 		var checks = designs.AsParallel()
 			.Select(design => design.CountWays(towels.Where(t => design.Contains(t)).ToArray()));
 
-		Console.WriteLine($"Part 1: {checks.Count(ways => ways > 0)}, Part 2: {checks.Sum()}");
+		yield return checks.Count(ways => ways > 0);
+		yield return checks.Sum();
 	}
 
 	// memoization

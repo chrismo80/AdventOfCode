@@ -1,69 +1,80 @@
+using AdventOfCode;
+
 namespace AdventOfCode2020;
+
 public static class Day12
 {
-    public static void Solve()
-    {
-        var input = File.ReadAllLines("AdventOfCode/2020/12/Input.txt")
-            .Select(row => (action: row[0], value: int.Parse(row[1..]))).ToArray();
+	public static IEnumerable<object> Solve(string input)
+	{
+		var lines = input.Lines()
+			.Select(row => (action: row[0], value: int.Parse(row[1..]))).ToArray();
 
-        var ship = (X: 0, Y: 0, F: 1); // 0: north, 1: east, 2: south, 3: west
-        var wayPoint = (X: 10, Y: -1);
+		var ship = (X: 0, Y: 0, F: 1); // 0: north, 1: east, 2: south, 3: west
+		var wayPoint = (X: 10, Y: -1);
 
-        foreach (var command in input)
-            MoveShip(command, ref ship);
+		foreach (var command in lines)
+			MoveShip(command, ref ship);
 
-        var result1 = Math.Abs(ship.X) + Math.Abs(ship.Y);
+		yield return Math.Abs(ship.X) + Math.Abs(ship.Y);
 
-        ship = (X: 0, Y: 0, F: 1);
+		ship = (X: 0, Y: 0, F: 1);
 
-        foreach (var command in input)
-            MoveWayPoint(command, ref ship, ref wayPoint);
+		foreach (var command in lines)
+			MoveWayPoint(command, ref ship, ref wayPoint);
 
-        var result2 = Math.Abs(ship.X) + Math.Abs(ship.Y);
+		yield return Math.Abs(ship.X) + Math.Abs(ship.Y);
 
-        Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		void MoveShip((char Action, int Value) cmd, ref (int X, int Y, int Face) pos)
+		{
+			switch (cmd.Action)
+			{
+				case 'N': pos.Y -= cmd.Value; break;
+				case 'S': pos.Y += cmd.Value; break;
+				case 'E': pos.X += cmd.Value; break;
+				case 'W': pos.X -= cmd.Value; break;
+				case 'L':
+					pos.Face -= cmd.Value / 90;
+					pos.Face += 4;
+					pos.Face %= 4;
+					break;
+				case 'R':
+					pos.Face += cmd.Value / 90;
+					pos.Face %= 4;
+					break;
+				case 'F':
+					pos.X += pos.Face == 1 ? cmd.Value : pos.Face == 3 ? cmd.Value * -1 : 0;
+					pos.Y += pos.Face == 2 ? cmd.Value : pos.Face == 0 ? cmd.Value * -1 : 0;
+					break;
+			}
+		}
 
-        void MoveShip((char Action, int Value) cmd, ref (int X, int Y, int Face) pos)
-        {
-            switch (cmd.Action)
-            {
-                case 'N': pos.Y -= cmd.Value; break;
-                case 'S': pos.Y += cmd.Value; break;
-                case 'E': pos.X += cmd.Value; break;
-                case 'W': pos.X -= cmd.Value; break;
-                case 'L': pos.Face -= cmd.Value / 90; pos.Face += 4; pos.Face %= 4; break;
-                case 'R': pos.Face += cmd.Value / 90; pos.Face %= 4; break;
-                case 'F':
-                    pos.X += pos.Face == 1 ? cmd.Value : pos.Face == 3 ? cmd.Value * -1 : 0;
-                    pos.Y += pos.Face == 2 ? cmd.Value : pos.Face == 0 ? cmd.Value * -1 : 0;
-                    break;
-            }
-        }
+		void MoveWayPoint((char Action, int Value) cmd,
+			ref (int X, int Y, int Face) ship, ref (int X, int Y) wayPoint)
+		{
+			var (dX, dY) = (wayPoint.X - ship.X, wayPoint.Y - ship.Y);
 
-        void MoveWayPoint((char Action, int Value) cmd,
-            ref (int X, int Y, int Face) ship, ref (int X, int Y) wayPoint)
-        {
-            var (dX, dY) = (wayPoint.X - ship.X, wayPoint.Y - ship.Y);
+			switch (cmd.Action)
+			{
+				case 'N': wayPoint.Y -= cmd.Value; break;
+				case 'S': wayPoint.Y += cmd.Value; break;
+				case 'E': wayPoint.X += cmd.Value; break;
+				case 'W': wayPoint.X -= cmd.Value; break;
+				case 'L' or 'R':
+					for (var i = 90; i <= cmd.Value; i += 90)
+					{
+						wayPoint.X = ship.X + (cmd.Action == 'R' ? -dY : dY);
+						wayPoint.Y = ship.Y + (cmd.Action == 'L' ? -dX : dX);
+						(dX, dY) = (wayPoint.X - ship.X, wayPoint.Y - ship.Y);
+					}
 
-            switch (cmd.Action)
-            {
-                case 'N': wayPoint.Y -= cmd.Value; break;
-                case 'S': wayPoint.Y += cmd.Value; break;
-                case 'E': wayPoint.X += cmd.Value; break;
-                case 'W': wayPoint.X -= cmd.Value; break;
-                case 'L' or 'R':
-                    for (int i = 90; i <= cmd.Value; i += 90)
-                    {
-                        wayPoint.X = ship.X + (cmd.Action == 'R' ? -dY : dY);
-                        wayPoint.Y = ship.Y + (cmd.Action == 'L' ? -dX : dX);
-                        (dX, dY) = (wayPoint.X - ship.X, wayPoint.Y - ship.Y);
-                    }
-                    break;
-                case 'F':
-                    ship.X += dX * cmd.Value; wayPoint.X = ship.X + dX;
-                    ship.Y += dY * cmd.Value; wayPoint.Y = ship.Y + dY;
-                    break;
-            }
-        }
-    }
+					break;
+				case 'F':
+					ship.X += dX * cmd.Value;
+					wayPoint.X = ship.X + dX;
+					ship.Y += dY * cmd.Value;
+					wayPoint.Y = ship.Y + dY;
+					break;
+			}
+		}
+	}
 }

@@ -1,15 +1,16 @@
+using AdventOfCode;
+
 namespace AdventOfCode2017;
 
 public static class Day21
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = File.ReadAllLines("AdventOfCode/2017/21/Test.txt")
-			.Select(row => row.Split(" => ")).ToArray();
+		var data = input.Lines().Select(row => row.Split(" => ")).ToArray();
 
 		var rules = new Dictionary<string, string>();
 
-		foreach (var rule in input)
+		foreach (var rule in data)
 		{
 			rules[rule[0]] = rule[1];
 			rules[rule[0].FlipH()] = rule[1];
@@ -36,7 +37,8 @@ public static class Day21
 				image = rules[image];
 			}
 
-		Console.WriteLine($"Part 1: {0}, Part 2: {0}");
+		yield return 0;
+		yield return 0;
 	}
 
 	private static string FlipH(this string pattern) =>

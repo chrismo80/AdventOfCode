@@ -1,18 +1,23 @@
+using AdventOfCode;
+
 namespace AdventOfCode2018;
 
 public static class Day2
 {
-    public static void Solve()
-    {
-        var input = File.ReadAllLines("AdventOfCode/2018/02/Input.txt");
+	public static IEnumerable<object> Solve(string input)
+	{
+		var lines = input.Lines();
 
-        int Count(int match) => input.Count(box => box.Select(c => box.Count(x => x == c)).Contains(match));
+		int Count(int match)
+		{
+			return lines.Count(box => box.Select(c => box.Count(x => x == c)).Contains(match));
+		}
 
-        var result2 = Enumerable.Range(0, input[0].Length)
-            .Select(position => input.Select(box => box.Remove(position, 1))
-                .GroupBy(box => box).Where(group => group.Count() > 1).Select(group => group.Key)) // find duplicates
-            .Single(l => l.Any()).Single();
+		yield return Count(2) * Count(3);
 
-        Console.WriteLine($"Part 1: {Count(2) * Count(3)}, Part 2: {result2}");
-    }
+		yield return Enumerable.Range(0, lines[0].Length)
+			.Select(position => lines.Select(box => box.Remove(position, 1))
+				.GroupBy(box => box).Where(group => group.Count() > 1).Select(group => group.Key)) // find duplicates
+			.Single(l => l.Any()).Single();
+	}
 }

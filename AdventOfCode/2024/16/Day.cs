@@ -4,9 +4,9 @@ namespace AdventOfCode2024;
 
 public static class Day16
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var map = Input.Load(2024, 16).ToMap();
+		var map = input.ToMap();
 
 		var start = map.Find('S').First();
 		var end = map.Find('E').First();
@@ -14,10 +14,7 @@ public static class Day16
 		var walkable = ((int, int) pos) => pos.Neighbors(map[0].Length, map.Length)
 			.Where(n => map[n.Y][n.X] != '#');
 
-		var result1 = walkable.Search(start, end);
-		var result2 = 0;
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return walkable.Search(start, end);
 	}
 
 	private static int Search(this Func<(int, int), IEnumerable<(int, int)>> walkableNeighbors,

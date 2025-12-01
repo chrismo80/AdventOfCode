@@ -4,23 +4,21 @@ namespace AdventOfCode2024;
 
 public static class Day6
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var map = Input.Load(2024, 6).ToMap();
+		var map = input.ToMap();
 
-		var current = new PathFinding.Grid<char>() { Map = map }
+		var current = new PathFinding.Grid<char> { Map = map }
 			.Find((value) => value != '.' && value != '#').First();
 
-		var result1 = map.FindExit(current);
-		var result2 = map.PlaceObstacles().Count(variant => variant.FindExit(current) == 0);
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return map.FindExit(current);
+		yield return map.PlaceObstacles().Count(variant => variant.FindExit(current) == 0);
 	}
 
 	private static int FindExit(this char[][] map, (int X, int Y) current)
 	{
 		var direction = map[current.Y][current.X];
-		var visited = new HashSet<(int, int)>() { current };
+		var visited = new HashSet<(int, int)> { current };
 
 		var loopDetected = 100; // best guess
 		var visitedTwice = 0;

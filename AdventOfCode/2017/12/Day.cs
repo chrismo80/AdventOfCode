@@ -1,40 +1,40 @@
-namespace AdventOfCode2017
+using AdventOfCode;
+
+namespace AdventOfCode2017;
+
+public static class Day12
 {
-    public static class Day12
-    {
-        public static void Solve()
-        {
-            var input = File.ReadAllLines("AdventOfCode/2017/12/Input.txt")
-                .Select(row => row.Split(new string[] { "<->", "," }, StringSplitOptions.TrimEntries)
-                    .Select(int.Parse));
+	public static IEnumerable<object> Solve(string input)
+	{
+		var data = input.Lines()
+			.Select(row => row.Split(new string[] { "<->", "," }, StringSplitOptions.TrimEntries)
+				.Select(int.Parse));
 
-            var all = input.SelectMany(p => p).ToHashSet();
-            var found = new HashSet<int>();
+		var all = data.SelectMany(p => p).ToHashSet();
+		var found = new HashSet<int>();
 
-            int count = 0, groups = 0, result1 = 0;
+		int count = 0, groups = 0, result1 = 0;
 
-            while (found.Count < all.Count)
-            {
-                int start = found.Count == 0 ? 0 : all.Except(found).First();
+		while (found.Count < all.Count)
+		{
+			var start = found.Count == 0 ? 0 : all.Except(found).First();
 
-                found.Add(start);
+			found.Add(start);
 
-                while (count != found.Count)
-                {
-                    count = found.Count;
+			while (count != found.Count)
+			{
+				count = found.Count;
 
-                    foreach (var connections in input.Where(p => !found.Contains(p.First())))
-                    {
-                        if (found.Intersect(connections).Any())
-                            found.UnionWith(connections);
-                    }
-                }
+				foreach (var connections in data.Where(p => !found.Contains(p.First())))
+					if (found.Intersect(connections).Any())
+						found.UnionWith(connections);
+			}
 
-                groups++;
-                result1 = result1 == 0 ? found.Count : result1;
-            }
+			groups++;
+			result1 = result1 == 0 ? found.Count : result1;
+		}
 
-            Console.WriteLine($"Part 1: {result1}, Part 2: {groups}");
-        }
-    }
+		yield return result1;
+		yield return groups;
+	}
 }

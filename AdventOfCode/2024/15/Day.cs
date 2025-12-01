@@ -4,17 +4,17 @@ namespace AdventOfCode2024;
 
 public static class Day15
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 15).ToArray<string>("\n\n");
+		var parts = input.ToArray<string>("\n\n");
 
-		var map = input[0].ToMap();
+		var map = parts[0].ToMap();
 
 		var walls = map.Find('#').ToHashSet();
 		var boxes = map.Find('O').ToHashSet();
 		var robot = map.Find('@').First();
 
-		foreach (var move in input[1].Where(c => c != '\n'))
+		foreach (var move in parts[1].Where(c => c != '\n'))
 		{
 			var stack = boxes.FindStack(robot, move).ToList();
 
@@ -28,10 +28,7 @@ public static class Day15
 				boxes.Add(stack.Last());
 		}
 
-		var result1 = boxes.Select(b => b.Y * 100 + b.X).Sum();
-		var result2 = 0;
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return boxes.Select(b => b.Y * 100 + b.X).Sum();
 	}
 
 	private static IEnumerable<(int X, int Y)> FindStack(this HashSet<(int X, int Y)> boxes,

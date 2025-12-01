@@ -4,7 +4,7 @@ namespace AdventOfCode2024;
 
 public static class Day10
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
 		var map = Input.Load(2024, 10).ToMap();
 
@@ -16,10 +16,8 @@ public static class Day10
 
 		var trails = starts.Select(start => ends.Select(end => walkable.FindTrails(start, end))).ToList();
 
-		var result1 = trails.Sum(trail => trail.Count(t => t > 0));
-		var result2 = trails.Sum(trail => trail.Sum());
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return trails.Sum(trail => trail.Count(t => t > 0));
+		yield return trails.Sum(trail => trail.Sum());
 	}
 
 	private static int FindTrails<T>(this Func<T, IEnumerable<T>> walkableNeighbors, T start, T end)

@@ -6,10 +6,8 @@ namespace AdventOfCode2024;
 
 public static class Day3
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 3);
-
 		var matches = new Regex(@"mul\((\d+)\,(\d+)\)|do\(\)|don\'t\(\)").Matches(input);
 
 		var multiplications = matches.Where(match => match.Value.StartsWith("mul"));
@@ -32,7 +30,8 @@ public static class Day3
 					break;
 			}
 
-		Console.WriteLine($"Part 1: {Calculate(multiplications)}, Part 2: {Calculate(instructions)}");
+		yield return Calculate(multiplications);
+		yield return Calculate(instructions);
 	}
 
 	private static int Calculate(IEnumerable<Match> matches) =>

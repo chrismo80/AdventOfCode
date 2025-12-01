@@ -1,14 +1,16 @@
+using AdventOfCode;
+
 namespace AdventOfCode2016;
 
 using Extensions;
 
 public static class Day24
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var map = File.ReadAllLines("AdventOfCode/2016/24/Input.txt").Select(row => row.ToArray()).ToArray();
+		var map = input.ToMap();
 
-		var search = new PathFinding.Grid<char>()
+		var search = new PathFinding.Grid<char>
 			{ Map = map, Walkable = (_, _, next, _, _, _, _, _, _) => next != '#' };
 		var distances = new Dictionary<(int From, int To), int>();
 
@@ -28,8 +30,8 @@ public static class Day24
 		var route1 = routes.Select(route => route.Prepend(0)).OrderBy(TotalDistance).First();
 		var route2 = routes.Select(route => route.Prepend(0).Append(0)).OrderBy(TotalDistance).First();
 
-		Console.WriteLine($"Part 1: {TotalDistance(route1)} ({string.Join('-', route1)})");
-		Console.WriteLine($"Part 2: {TotalDistance(route2)} ({string.Join('-', route2)})");
+		yield return TotalDistance(route1);
+		yield return TotalDistance(route2);
 
 		// calc the total distance for a specific route (combination of nodes based on distances dictionary)
 		int TotalDistance(IEnumerable<int> route)

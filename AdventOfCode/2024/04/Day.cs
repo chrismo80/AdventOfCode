@@ -5,21 +5,19 @@ namespace AdventOfCode2024;
 
 public static class Day4
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 4).ToMap();
+		var map = input.ToMap();
 
-		var result1 = GetLines(input)
+		yield return GetLines(map)
 			.Select(line => Regex.Matches(line, "XMAS").Count)
 			.Sum();
 
 		var corners = new[] { "MMSS", "MSSM", "SSMM", "SMMS" };
 
-		var result2 = FindChar(input, 'A')
-			.Select(center => FindDiagonalNeighbors(input, center))
+		yield return FindChar(map, 'A')
+			.Select(center => FindDiagonalNeighbors(map, center))
 			.Count(neighbors => corners.Contains(neighbors));
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
 	}
 
 	private static IEnumerable<(int X, int Y)> FindChar(char[][] input, char c)

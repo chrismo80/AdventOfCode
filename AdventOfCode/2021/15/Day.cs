@@ -1,24 +1,26 @@
+using AdventOfCode;
+
 namespace AdventOfCode2021;
 
 public static class Day15
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = File.ReadAllLines("AdventOfCode/2021/15/Input.txt")
+		var map = input.Lines()
 			.Select(row => row.Select(c => c - '0').ToArray()).ToArray();
 
-		var search = new PathFinding.Grid<int>()
+		var search = new PathFinding.Grid<int>
 		{
-			Map = input,
+			Map = map,
 			Walkable = (_, _, _, _, _, _, _, _, _) => true,
 			Cost = (neighbor) => neighbor
 		};
 
 		var path = search.AStar((0, 0), (99, 99));
-		var result1 = path.Sum(p => input[p.Y][p.X]);
+		var result1 = path.Sum(p => map[p.Y][p.X]);
 		//Console.WriteLine(search.Print());
 
-		var row = input.Select(row => row
+		var row = map.Select(row => row
 			.Concat(row.Select(r => r + 1))
 			.Concat(row.Select(r => r + 2))
 			.Concat(row.Select(r => r + 3))
@@ -37,6 +39,7 @@ public static class Day15
 		var result2 = path.Sum(p => map2[p.Y][p.X]);
 		//Console.WriteLine(search.Print());
 
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return result1;
+		yield return result2;
 	}
 }

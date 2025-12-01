@@ -6,9 +6,9 @@ namespace AdventOfCode2024;
 
 public static class Day14
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var robots = Input.Load(2024, 14).Lines()
+		var robots = input.Lines()
 			.Match<int>(new Regex(@"p\=(-?\d+)\,(-?\d+)\ v\=(-?\d+)\,(-?\d+)"))
 			.Select(groups => new Robot(groups))
 			.ToArray();
@@ -28,10 +28,8 @@ public static class Day14
 				robot.Move(width, height);
 		}
 
-		var result1 = safetyFactors[100];
-		var result2 = Array.IndexOf(safetyFactors.Values.ToArray(), safetyFactors.Values.Min());
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return safetyFactors[100];
+		yield return Array.IndexOf(safetyFactors.Values.ToArray(), safetyFactors.Values.Min());
 	}
 
 	private static void Print(this Robot[] robots, int width, int height)

@@ -1,21 +1,25 @@
+using AdventOfCode;
+
 namespace AdventOfCode2020;
+
 public static class Day1
 {
-    public static void Solve()
-    {
-        var input = File.ReadAllLines("AdventOfCode/2020/01/Input.txt").Select(int.Parse);
+	public static IEnumerable<object> Solve(string input)
+	{
+		var data = input.ToArray<int>("/n");
 
-        var result1 = (from x in input
-                       from y in input
-                       where x + y == 2020
-                       select x * y).First();
+		var result1 = (from x in data
+			from y in data
+			where x + y == 2020
+			select x * y).First();
 
-        var result2 = (from x in input
-                       from y in input
-                       from z in input
-                       where x + y + z == 2020
-                       select x * y * z).First();
+		var result2 = (from x in data
+			from y in data
+			from z in data
+			where x + y + z == 2020
+			select x * y * z).First();
 
-        Console.WriteLine($"Part 1: {result1} (437931), Part 2: {result2} (157667328)");
-    }
+		yield return result1;
+		yield return result2;
+	}
 }

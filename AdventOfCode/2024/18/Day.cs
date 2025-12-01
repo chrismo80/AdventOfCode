@@ -4,18 +4,16 @@ namespace AdventOfCode2024;
 
 public static class Day18
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = Input.Load(2024, 18).ToNestedArray<int>("\n", ",")
+		var data = input.ToNestedArray<int>("\n", ",")
 			.Select(d => (d.First(), d.Last())).ToArray();
 
 		var walkable = ((int, int) pos) => pos.Neighbors(71, 71)
-			.Where(n => !input.Take(1024).Contains(n));
+			.Where(n => !data.Take(1024).Contains(n));
 
-		var result1 = walkable.Bfs((0, 0), (70, 70)).Count();
-		var result2 = FindCutOff(input);
-
-		Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
+		yield return walkable.Bfs((0, 0), (70, 70)).Count();
+		yield return FindCutOff(data);
 	}
 
 	private static (int, int) FindCutOff((int, int)[] bytes)

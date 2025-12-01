@@ -1,28 +1,30 @@
-namespace AdventOfCode2015
+using AdventOfCode;
+
+namespace AdventOfCode2015;
+
+using System.Text.RegularExpressions;
+
+public static class Day8
 {
-    using System.Text.RegularExpressions;
-    public static class Day8
-    {
-        public static void Solve()
-        {
-            var input = File.ReadAllLines("AdventOfCode/2015/08/Input.txt");
+	public static IEnumerable<object> Solve(string input)
+	{
+		var lines = input.Lines();
 
-            var sizeInCode = input.Select(text => text.Length);
+		var sizeInCode = lines.Select(text => text.Length);
 
-            var memory = input
-                .Select(text => Regex.Unescape(text))
-                .Select(text => text[1..^1].Replace(@"\", "-").Replace("\"", "-"));
+		var memory = lines
+			.Select(text => Regex.Unescape(text))
+			.Select(text => text[1..^1].Replace(@"\", "-").Replace("\"", "-"));
 
-            var sizeInMemory = memory.Select(text => text.Length);
+		var sizeInMemory = memory.Select(text => text.Length);
 
-            var encoded = input
-                .Select(text => text.Replace("\\", @"\\").Replace("\"", @"\"""))
-                .Select(text => "\"" + text + "\"");
+		var encoded = lines
+			.Select(text => text.Replace("\\", @"\\").Replace("\"", @"\"""))
+			.Select(text => "\"" + text + "\"");
 
-            var sizeEncoded = encoded.Select(text => text.Length);
+		var sizeEncoded = encoded.Select(text => text.Length);
 
-            Console.WriteLine($"Part 1: {sizeInCode.Sum() - sizeInMemory.Sum()}");
-            Console.WriteLine($"Part 2: {sizeEncoded.Sum() - sizeInCode.Sum()}");
-        }
-    }
+		yield return sizeInCode.Sum() - sizeInMemory.Sum();
+		yield return sizeEncoded.Sum() - sizeInCode.Sum();
+	}
 }

@@ -1,10 +1,12 @@
+using AdventOfCode;
+
 namespace AdventOfCode2019;
 
 public static class Day22
 {
-	public static void Solve()
+	public static IEnumerable<object> Solve(string input)
 	{
-		var input = File.ReadAllLines("AdventOfCode/2019/22/Input.txt")
+		var lines = input.Lines()
 			.Select(row => row.Split(' ').TakeLast(2)).ToList();
 
 		int n, i, loop = 1, size = 10_007; //119_315_717_514_047;
@@ -13,7 +15,7 @@ public static class Day22
 		var history = new HashSet<int>();
 
 		while (loop-- > 0)
-			foreach (var cmd in input)
+			foreach (var cmd in lines)
 				switch (cmd.First())
 				{
 					case "cut":
@@ -39,8 +41,7 @@ public static class Day22
 						break;
 				}
 
-		Console.WriteLine(deck.ToList().IndexOf(2019));
-
-		Console.WriteLine(deck[2020]);
+		yield return deck.ToList().IndexOf(2019);
+		yield return deck[2020];
 	}
 }

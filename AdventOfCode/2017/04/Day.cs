@@ -1,18 +1,16 @@
-namespace AdventOfCode2017
+using AdventOfCode;
+
+namespace AdventOfCode2017;
+
+public static class Day4
 {
-    public static class Day4
-    {
-        public static void Solve()
-        {
-            var input = File.ReadAllLines("AdventOfCode/2017/04/Input.txt").Select(row => row.Split(' '));
+	public static IEnumerable<object> Solve(string input)
+	{
+		var data = input.Lines().Select(row => row.Split(' '));
 
-            var result1 = input
-                .Count(p => p.Length == p.Distinct().Count());
+		yield return data.Count(p => p.Length == p.Distinct().Count());
 
-            var result2 = input.Select(p => p.Select(w => new string(w.Order().ToArray())).ToArray())
-                .Count(p => p.Length == p.Distinct().Count());
-
-            Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
-        }
-    }
+		yield return data.Select(p => p.Select(w => new string(w.Order().ToArray())).ToArray())
+			.Count(p => p.Length == p.Distinct().Count());
+	}
 }

@@ -1,62 +1,63 @@
+using AdventOfCode;
+
 namespace AdventOfCode2016;
+
 using Extensions;
 
 public static class Day10
 {
-    record Robot(int Id, List<int> Chips, List<List<string>> Targets);
-    record Output(int Id, List<int> Chips);
+	private record Robot(int Id, List<int> Chips, List<List<string>> Targets);
 
-    public static void Solve()
-    {
-        var input = File.ReadAllLines("AdventOfCode/2016/10/Input.txt")
-            .Select(row => row.Split(' ').ToArray());
+	private record Output(int Id, List<int> Chips);
 
-        var robots = new List<Robot>();
-        var outputs = new List<Output>();
+	public static IEnumerable<object> Solve(string input)
+	{
+		var data = input.Lines().Select(row => row.Split(' ').ToArray());
 
-        foreach (var words in input.Where(words => words[0] == "bot"))
-        {
-            robots.Add(new Robot(int.Parse(words[1]),
-                new List<int>(),
-                new List<List<string>>() { words.Skip(5).Take(2).ToList(), words.TakeLast(2).ToList() }));
-        }
+		var robots = new List<Robot>();
+		var outputs = new List<Output>();
 
-        foreach (var words in input.Where(words => words[0] == "value"))
-            robots.First(r => r.Id == int.Parse(words[5])).Chips.Add(int.Parse(words[1]));
+		foreach (var words in data.Where(words => words[0] == "bot"))
+			robots.Add(new Robot(int.Parse(words[1]),
+				new List<int>(),
+				new List<List<string>> { words.Skip(5).Take(2).ToList(), words.TakeLast(2).ToList() }));
 
-        var result1 = 0;
-        var robot = robots.Single(r => r.Chips.Count > 1);
+		foreach (var words in data.Where(words => words[0] == "value"))
+			robots.First(r => r.Id == int.Parse(words[5])).Chips.Add(int.Parse(words[1]));
 
-        while (robot != null)
-        {
-            var chips = robot.Chips.Order();
+		var result1 = 0;
+		var robot = robots.Single(r => r.Chips.Count > 1);
 
-            if (chips.First() == 17 && chips.Last() == 61)
-                result1 = robot.Id;
+		while (robot != null)
+		{
+			var chips = robot.Chips.Order();
 
-            foreach (var (chip, i) in chips.Select((c, i) => (c, i)))
-            {
-                if (robot.Targets[i][0] == "bot")
-                    robots.First(r => r.Id == int.Parse(robot.Targets[i][1])).Chips.Add(chip);
+			if (chips.First() == 17 && chips.Last() == 61)
+				result1 = robot.Id;
 
-                if (robot.Targets[i][0] == "output")
-                {
-                    var output = outputs.Find(o => o.Id == int.Parse(robot.Targets[i][1]));
+			foreach (var (chip, i) in chips.Select((c, i) => (c, i)))
+			{
+				if (robot.Targets[i][0] == "bot")
+					robots.First(r => r.Id == int.Parse(robot.Targets[i][1])).Chips.Add(chip);
 
-                    if (output == null)
-                        outputs.Add(new Output(int.Parse(robot.Targets[i][1]), new List<int>()));
+				if (robot.Targets[i][0] == "output")
+				{
+					var output = outputs.Find(o => o.Id == int.Parse(robot.Targets[i][1]));
 
-                    outputs.Single(o => o.Id == int.Parse(robot.Targets[i][1])).Chips.Add(chip);
-                }
-            }
+					if (output == null)
+						outputs.Add(new Output(int.Parse(robot.Targets[i][1]), new List<int>()));
 
-            robot.Chips.Clear();
-            robot = robots.Find(r => r.Chips.Count > 1);
-        }
+					outputs.Single(o => o.Id == int.Parse(robot.Targets[i][1])).Chips.Add(chip);
+				}
+			}
 
-        var result2 = outputs.OrderBy(o => o.Id).Take(3).Select(o => o.Chips)
-            .SelectMany(c => c).Product();
+			robot.Chips.Clear();
+			robot = robots.Find(r => r.Chips.Count > 1);
+		}
 
-        Console.WriteLine($"Part 1: {result1}, Part 2: {result2}");
-    }
+		yield return result1;
+
+		yield return outputs.OrderBy(o => o.Id).Take(3).Select(o => o.Chips)
+			.SelectMany(c => c).Product();
+	}
 }
