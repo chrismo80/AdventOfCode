@@ -5,4 +5,4 @@ var problems = years.SelectMany(year => days.Select(day => (year, day)))
 	.Where(problem => AdventOfCode.Input.Exists(problem.year, problem.day))
 	.ToArray();
 
-AdventOfCode.Problem.Solve(problems.SkipLast(1).Last());
+AdventOfCode.Problem.Solve(problems.Last());
