@@ -2,28 +2,26 @@ using AdventOfCode;
 
 namespace AdventOfCode2025;
 
-public static class Day1
+public static class Day2
 {
 	public static IEnumerable<object> Solve(string input)
 	{
-		var steps = input.Lines().Select(s => int.Parse(s.Replace("L", "-").Replace("R", "+")));
+		var ranges = input.ToNestedArray<long>(",", "-");
 
-		yield return CountZeros(steps);
+		yield return ranges.Sum(range => GetInvalid(range.First(), range.Last()).Sum());
 	}
 
-	private static int CountZeros(IEnumerable<int> steps)
+	private static IEnumerable<long> GetInvalid(long start, long end)
 	{
-		int position = 50, count = 0;
-
-		foreach (var step in steps)
+		for (var i = start; i <= end; i++)
 		{
-			position += step;
-			position %= 100;
+			var text = i.ToString();
 
-			if (position == 0)
-				count++;
+			var left = text.Substring(0, text.Length / 2);
+			var right = text.Substring(text.Length / 2);
+
+			if (left == right)
+				yield return i;
 		}
-
-		return count;
 	}
 }
