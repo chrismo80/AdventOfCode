@@ -17,13 +17,8 @@ public static class Day1
 		var count = 0;
 
 		foreach (var step in steps)
-		{
-			position += step;
-			position %= 100;
-
-			if (position == 0)
+			if (Step(ref position, step))
 				count++;
-		}
 
 		return count;
 	}
@@ -37,26 +32,24 @@ public static class Day1
 			var distance = step;
 
 			while (distance-- > 0)
-			{
-				position++;
-				position %= 100;
-
-				if (position == 0)
+				if (Step(ref position, 1))
 					count++;
-			}
 
 			distance = step;
 
 			while (distance++ < 0)
-			{
-				position--;
-				position %= 100;
-
-				if (position == 0)
+				if (Step(ref position, -1))
 					count++;
-			}
 		}
 
 		return count;
+	}
+
+	private static bool Step(ref int position, int distance)
+	{
+		position += distance;
+		position %= 100;
+
+		return position == 0;
 	}
 }
