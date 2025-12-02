@@ -16,8 +16,10 @@ public static class Problem
 
 		long start = Stopwatch.GetTimestamp(), i = 1;
 
-		if (method.Invoke(null, [input]) is not IEnumerable<object> results)
+		if (method.Invoke(null, [input]) is not IEnumerable<object> returned)
 			return;
+
+		var results = returned.ToList();
 
 		Console.Write($"Year {problem.Year} Day {problem.Day:00}: {Stopwatch.GetElapsedTime(start).TotalMilliseconds:F1} ms".PadRight(40));
 

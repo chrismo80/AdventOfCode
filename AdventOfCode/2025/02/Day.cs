@@ -8,10 +8,25 @@ public static class Day2
 	{
 		var ranges = input.ToNestedArray<long>(",", "-");
 
-		yield return ranges.Sum(range => GetInvalid(range.First(), range.Last()).Sum());
+		yield return ranges.Sum(range => GetInvalid1(range.First(), range.Last()).Sum());
+		yield return ranges.Sum(range => GetInvalid2(range.First(), range.Last()).Sum());
 	}
 
-	private static IEnumerable<long> GetInvalid(long start, long end)
+	private static IEnumerable<long> GetInvalid1(long start, long end)
+	{
+		for (var i = start; i <= end; i++)
+		{
+			var text = i.ToString();
+
+			var left = text.Substring(0, text.Length / 2);
+			var right = text.Substring(text.Length / 2);
+
+			if (left == right)
+				yield return i;
+		}
+	}
+
+	private static IEnumerable<long> GetInvalid2(long start, long end)
 	{
 		for (var i = start; i <= end; i++)
 		{
