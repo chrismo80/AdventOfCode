@@ -33,12 +33,20 @@ public static class MapExtensions
 				yield return (x, y);
 	}
 
-	public static IEnumerable<(int X, int Y)> Neighbors(this (int X, int Y) pos, int width, int height)
+	public static IEnumerable<(int X, int Y)> Neighbors(this (int X, int Y) pos, int width, int height, bool includingCorners = false)
 	{
 		if (pos.X > 0) yield return pos with { X = pos.X - 1 };
 		if (pos.Y > 0) yield return pos with { Y = pos.Y - 1 };
 		if (pos.X < width - 1) yield return pos with { X = pos.X + 1 };
 		if (pos.Y < height - 1) yield return pos with { Y = pos.Y + 1 };
+
+		if (!includingCorners)
+			yield break;
+
+		if (pos.X > 0 && pos.Y > 0) yield return (pos.X - 1, pos.Y - 1);
+		if (pos.X < width - 1 && pos.Y > 0) yield return (pos.X + 1, pos.Y - 1);
+		if (pos.X > 0 && pos.Y < height - 1) yield return (pos.X - 1, pos.Y + 1);
+		if (pos.X < width - 1 && pos.Y < height - 1) yield return (pos.X + 1, pos.Y + 1);
 	}
 
 	public static IEnumerable<T> Bfs<T>(this Func<T, IEnumerable<T>> walkableNeighbors, T start, T end)
