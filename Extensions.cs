@@ -2,23 +2,35 @@ namespace Extensions;
 
 public static class LinqExtensions
 {
-	public static IEnumerable<IEnumerable<T>> Permutations<T>(this IEnumerable<T> source)
+	extension<T>(IEnumerable<T> source)
 	{
-		if (source.Count() == 1)
+		public IEnumerable<IEnumerable<T>> Permutations()
 		{
-			yield return source;
-			yield break;
+			if (source.Count() == 1)
+			{
+				yield return source;
+				yield break;
+			}
+
+			foreach (var variation in from e in source
+					from p in source.Where(s => !e.Equals(s)).Permutations()
+					select p.Prepend(e))
+				yield return variation;
 		}
 
-		foreach (var variation in from e in source
-				from p in Permutations(source.Where(s => !e.Equals(s)))
-				select p.Prepend(e))
-			yield return variation;
-	}
+		public IEnumerable<IEnumerable<T>> Combinations()
+		{
+			return Enumerable.Range(1, (1 << source.Count()) - 1) // 1 .. (2^N)-1
+				.Select(bitMask => source.Where((_, index) => (bitMask & (1 << index)) != 0));
+		}
 
-	public static IEnumerable<IEnumerable<T>> Combinations<T>(this IEnumerable<T> source) =>
-		Enumerable.Range(1, (1 << source.Count()) - 1) // 1 .. (2^N)-1
-			.Select(bitMask => source.Where((_, index) => (bitMask & (1 << index)) != 0));
+		public IEnumerable<T> RepeatForever()
+		{
+			while (true)
+				foreach (var item in source)
+					yield return item;
+		}
+	}
 
 	public static IEnumerable<IEnumerable<T>> CartesianProduct<T>(this IEnumerable<T> source, int columnCount)
 	{
@@ -40,13 +52,6 @@ public static class LinqExtensions
 			if (predicate(item))
 				yield break;
 		}
-	}
-
-	public static IEnumerable<T> RepeatForever<T>(this IEnumerable<T> source)
-	{
-		while (true)
-			foreach (var item in source)
-				yield return item;
 	}
 
 	public static IEnumerable<int> AllIndexesOf(this string text, string match)
