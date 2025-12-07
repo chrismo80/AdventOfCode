@@ -63,7 +63,7 @@ public static class LinqExtensions
 
 	public static IEnumerable<int> AllIndexesOf<T>(this IEnumerable<T> source, T match)
 	{
-		foreach (var item in source.Select((item, i) => (item, i)).Where(item => item.Equals(match)))
+		foreach (var item in source.Select((item, i) => (item, i)).Where(t => t.item.Equals(match)))
 			yield return item.i;
 	}
 
