@@ -22,22 +22,36 @@ public static class Day8
 
 		var circuits = new List<HashSet<Point>>();
 
-		foreach (var distance in distances)
+		foreach (var distance in distances.Take(10))
 		{
-			var circuit = circuits.FirstOrDefault(c => c.Contains(distance.Left) || c.Contains(distance.Right));
+			var circuit1 = circuits.FirstOrDefault(c => c.Contains(distance.Left));
+			var circuit2 = circuits.FirstOrDefault(c => c.Contains(distance.Right));
 
-			if (circuit is null)
+			if (circuit1 is null && circuit2 is null)
 			{
 				circuits.Add(new HashSet<Point> { distance.Left, distance.Right });
+				continue;
 			}
-			else
+
+			if (circuit1 is null || circuit2 is null)
 			{
-				circuit.Add(distance.Left);
-				circuit.Add(distance.Right);
+				circuit1?.Add(distance.Left);
+				circuit1?.Add(distance.Right);
+				circuit2?.Add(distance.Left);
+				circuit2?.Add(distance.Right);
+				continue;
+			}
+
+			if (circuit1 != circuit2)
+			{
+				circuit1.UnionWith(circuit2);
+				circuits.Remove(circuit2);
 			}
 		}
 
-		yield return circuits.Select(c => c.Count).OrderByDescending(c => c).Take(3).Product();
+		var counts = circuits.Select(c => c.Count).OrderByDescending(c => c);
+
+		yield return counts.Take(3).Product();
 	}
 
 	private static double Distance(Point p1, Point p2)
