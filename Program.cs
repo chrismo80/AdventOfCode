@@ -1,4 +1,4 @@
-﻿var years = Enumerable.Range(2015, 15);
+﻿var years = Enumerable.Range(2015, 9);
 var days = Enumerable.Range(1, 25);
 
 var problems = years.SelectMany(year => days.Select(day => (year, day)))
