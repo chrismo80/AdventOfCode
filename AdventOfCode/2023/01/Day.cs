@@ -4,15 +4,15 @@ namespace AdventOfCode2023;
 
 public static class Day1
 {
+	private static string[] _names =
+		["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+
 	public static IEnumerable<object> Solve(string input)
 	{
 		var lines = input.Lines();
 
 		yield return lines.Sum(GetCalibrationValue);
-
-		string[] names = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-
-		yield return lines.Sum(line => GetRealCalibrationValue(line, names));
+		yield return lines.Sum(GetRealCalibrationValue);
 	}
 
 	private static long GetCalibrationValue(string text)
@@ -22,10 +22,10 @@ public static class Day1
 		return long.Parse($"{digits.First()}{digits.Last()}");
 	}
 
-	private static long GetRealCalibrationValue(string text, string[] names)
+	private static long GetRealCalibrationValue(string text)
 	{
-		foreach (var name in names)
-			text = text.Replace(name, $"{name}{names.IndexOf(name)}{name}");
+		for (var i = 0; i < _names.Length; i++)
+			text = text.Replace(_names[i], $"{_names[i]}{i}{_names[i]}");
 
 		return GetCalibrationValue(text);
 	}
