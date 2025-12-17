@@ -33,23 +33,21 @@ public static class Day2
 		var id = int.Parse(line.Split(": ").First().Split(' ').Last());
 		var rounds = line.Split(": ").Last().Split("; ");
 
-		var colors = new List<(int, int, int)>();
+		return new Game(id, rounds.Select(GetColors).ToList());
+	}
 
-		foreach (var round in rounds)
+	private static (int, int, int) GetColors(string round)
+	{
+		var colors = new Dictionary<string, int>
 		{
-			int r = 0, g = 0, b = 0;
+			{ "red", 0 },
+			{ "green", 0 },
+			{ "blue", 0 }
+		};
 
-			foreach (var color in round.Split(", "))
-				switch (color.Split(' ').Last())
-				{
-					case "red": r = int.Parse(color.Split(' ').First()); break;
-					case "green": g = int.Parse(color.Split(' ').First()); break;
-					case "blue": b = int.Parse(color.Split(' ').First()); break;
-				}
+		foreach (var color in round.Split(", "))
+			colors[color.Split(' ').Last()] = int.Parse(color.Split(' ').First());
 
-			colors.Add((r, g, b));
-		}
-
-		return new Game(id, colors);
+		return (colors["red"], colors["green"], colors["blue"]);
 	}
 }
